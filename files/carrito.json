@@ -1,0 +1,18 @@
+[
+    {
+        "id": 1,
+        "timestamp": "06/10/2021 23:26:2",
+        "producto": [
+            {
+                "id": 1,
+                "timestamp": "06/10/2021 23:26:2",
+                "nombre": "Huevos",
+                "descripcion": "descripcion",
+                "codigo": "b4b2e6a3-9ce0-4683-87cf-d544e48fb037",
+                "foto": "https://upload.wikimedia.org/wikipedia/en/5/58/Instagram_egg.jpg",
+                "precio": 100,
+                "stock": 10
+            }
+        ]
+    }
+]
