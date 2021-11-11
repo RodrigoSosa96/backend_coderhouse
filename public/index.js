@@ -45,24 +45,47 @@ socket.on("mensajes", (data) => {
 	renderMensajes(data);
 });
 
+const schemaAuthor = new normalizr.schema.Entity('author', {}, { idAttribute: 'email' });
+const schemaMessage = new normalizr.schema.Entity('message', { author: schemaAuthor }, { idAttribute: '_id' });
+const schemaChat = new normalizr.schema.Array(schemaMessage);
 const renderMensajes = (data) => {
-	let html = data.chat
+	const denormalizedData = normalizr.denormalize(data.chat.result, schemaChat, data.entities);
+
+	let html = denormalizedData
 		.map(
 			(e) => `
-            <p><strong>${e.email}</strong><em>[${e.fecha}] : </em> ${e.mensaje} </p>
+            <p><strong>${e.author.email}</strong><em>[${e.author.nombre} ${e.author.apellido}. ${e.author.edad} años: Alias ${e.author.alias}] : </em> ${e.mensaje} </p>
         `
 		)
 		.join("\n");
 	document.getElementById("chat").innerHTML = html;
 };
-
+var mensaje = {
+	author: {
+		email: 'mail del usuario',
+		nombre: 'nombre del usuario',
+		apellido: 'apellido del usuario',
+		edad: 'edad del usuario',
+		alias: 'alias del usuario',
+		avatar: 'url avatar (foto, logo) del usuario'
+	},
+	text: 'mensaje del usuario'
+}
 const chatForm = document.getElementById("chatForm");
 chatForm.addEventListener("submit", (e) => {
 	e.preventDefault();
 	let chat = {
-		email: document.getElementById("email").value,
-		fecha: moment().format("DD/MM/YYYY HH:mm:ss"),
+		author: {
+			email: document.getElementById("email").value,
+			nombre: document.getElementById("nombre").value,
+			apellido: document.getElementById("apellido").value,
+			edad: document.getElementById("edad").value,
+			alias: document.getElementById("alias").value,
+			avatar: document.getElementById("avatar").value
+		},
 		mensaje: document.getElementById("mensaje").value,
 	};
 	socket.emit("nuevo-mensaje", chat);
 });
+
+
