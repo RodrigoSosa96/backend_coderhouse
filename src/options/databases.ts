@@ -4,7 +4,7 @@ export const options = {
     sqlite3: {
         client: "sqlite3",
         connection: {
-            filename: path.resolve(__dirname, "../../db/sqlite.db")
+            filename: path.resolve(__dirname, "../../mensajes/sqlite.db")
         },
         useNullAsDefault: true
     },

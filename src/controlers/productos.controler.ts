@@ -3,31 +3,28 @@ import { DateTime } from "luxon";
 import { v4 } from "uuid";
 import { ProductoType } from "../utils/interface";
 import { BadErrorHandler } from "../utils/Errors";
-import { carritoHuevos, prodHuevos } from "../models/File.controler";
 import { serverConfig } from "../constants/config";
-import { Producto } from "../models/Producto";
 import { CARRITO, PRODUCTOS } from "../backups";
-
+import { productos } from "../models/databases"
 
 export const getProductos = async (
-	///		/listar/:id?
 	req: Request,
 	res: Response,
 	next: NextFunction
 ) => {
-	let { body, params } = req;
+	///		/listar/:id?
+	let { params } = req;
 	try {
-		const datosProductos = (await prodHuevos.readFile()) as Array<ProductoType>;
-		if (params.id !== undefined) {
-			let arr = datosProductos.filter(
-				(prod) => prod.id === parseInt(params.id)
-			);
-			res.status(202).json(arr);
+		// const datosProductos = await prodHuevos.readFile() as ProductoType[];
+		if (params.id) {
+			const datosProductos = await productos.getItems(parseInt(params.id))
+			res.status(202).json(datosProductos);
 		} else {
+			const datosProductos = await productos.getItems() as ProductoType[]
 			res.status(202).json(datosProductos);
 		}
 	} catch {
-		next(new BadErrorHandler({}));
+		next();
 	}
 };
 
@@ -41,11 +38,10 @@ export const postProductos = async (
 	let { body } = req;
 	try {
 		if (serverConfig.admin === true) {
-			const datosProductos =
-				(await prodHuevos.readFile()) as Array<ProductoType>;
-			const newID = datosProductos.length + 1;
+
+			// const datosProductos = await prodHuevos.readFile() as ProductoType[];
+			// const newID = datosProductos.length + 1;
 			const newProduct: ProductoType = {
-				id: newID,
 				timestamp: DateTime.now().toFormat("dd/MM/yyyy HH:mm:s"),
 				nombre: body.nombre,
 				descripcion: body.descripcion,
@@ -54,14 +50,13 @@ export const postProductos = async (
 				precio: parseInt(body.precio),
 				stock: parseInt(body.stock),
 			};
-			datosProductos.push(newProduct);
-			await prodHuevos.writeFile(datosProductos);
+			await productos.newItems(newProduct)
 			res.status(201).json(newProduct);
 		} else {
 			next(new BadErrorHandler({ statusCode: 401 }));
 		}
 	} catch {
-		next(new BadErrorHandler({}));
+		next();
 	}
 };
 
@@ -73,25 +68,25 @@ export const putProductos = async (
 	//	/actualizar/:id
 	let { body, params } = req;
 	if (serverConfig.admin === true) {
-		const datosProductos = (await prodHuevos.readFile()) as Array<ProductoType>;
-		let objIndex = datosProductos.findIndex(
-			(obj) => obj.id == parseInt(params.id)
-		);
-		if (objIndex !== -1) {
-			// const newID = datosProductos.length + 1;
-			datosProductos[objIndex] = {
-				id: parseInt(body.id) || 0,
-				timestamp: DateTime.now().toFormat("dd/MM/yyyy HH:mm:s"),
-				nombre: body.nombre,
-				descripcion: body.descripcion,
-				codigo: v4(),
-				foto: body.foto,
-				precio: parseInt(body.precio),
-				stock: parseInt(body.stock),
-			};
-			await prodHuevos.writeFile(datosProductos);
-			res.status(201).json(datosProductos[objIndex])
-		} else {
+		// const datosProductos = (await prodHuevos.readFile()) as ProductoType[];
+		// let objIndex = datosProductos.findIndex(
+		// 	(obj) => obj.id == parseInt(params.id)
+		// );
+		const updateProduct = {
+			timestamp: DateTime.now().toFormat("dd/MM/yyyy HH:mm:s"),
+			nombre: body.nombre,
+			descripcion: body.descripcion,
+			codigo: v4(),
+			foto: body.foto,
+			precio: parseInt(body.precio),
+			stock: parseInt(body.stock),
+		};
+		const existe = await productos.updateItem(params.id, updateProduct)
+		if (existe !== 0) {
+			const lastProd = await productos.getItems(params.id)
+			res.status(201).json(lastProd)
+		}
+		else {
 			res.status(403).json({
 				error: -1,
 				descripcion: "Id del archivo no valida",
@@ -111,14 +106,10 @@ export const deleteProductos = async (
 	let { body, params } = req;
 
 	if (body.admin === "true") {
-		const datosProductos = (await prodHuevos.readFile()) as Array<ProductoType>;
-		let objIndex = datosProductos.findIndex(
-			(obj) => obj.id == parseInt(params.id)
-		);
-		if (objIndex !== -1) {
-			datosProductos.splice(objIndex, 1);
-			await prodHuevos.writeFile(datosProductos);
-			res.json(datosProductos);
+		const deleteProductos = await productos.deleteItem(params.id)
+		if (deleteProductos !== 0) {
+			const listaProd = await productos.getItems()
+			res.json(listaProd);
 		} else {
 			res.status(403).json({
 				error: -1,

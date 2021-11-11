@@ -6,9 +6,8 @@
   "scripts": {
     "build": "tsc -p ./ ",
     "build:watch": "tsc -p ./ --watch",
-    "start": "nodemon ./dist/server.js --ignore ./files/*",
-    "start:test": "nodemon ./dist/models/Chat.js --ignore ./files/*"
-
+    "start": "nodemon ./dist/server.js --ignore ./files/* --delay 1",
+    "start:test": "nodemon -L ./dist/models/databases.js --delay 1"
   },
   "repository": {
     "type": "git",

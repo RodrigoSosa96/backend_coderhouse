@@ -1,5 +1,5 @@
 export interface ProductoType {
-	id: number; //numero
+	id?: number; //numero
 	timestamp: string;
 	nombre: string;
 	descripcion: string;
@@ -9,9 +9,17 @@ export interface ProductoType {
 	stock: number;
 }
 export interface CarritoType {
-	id: number;
+	id?: number;
 	timestamp: string;
 	producto: Array<ProductoType>;
+}
+
+
+export interface ChatType {
+	id: number
+	email: string
+	fecha: string
+	mensaje: string
 }
 export interface ErrorArchivo {
 	error: number;

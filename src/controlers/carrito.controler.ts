@@ -1,10 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import { carritoHuevos, prodHuevos } from "../models/File.controler";
-import { CarritoType, ProductoType } from "../utils/interface";
 import { DateTime } from "luxon";
-import { BadErrorHandler } from "../utils/Errors";
-import { PRODUCTOS } from "../backups";
-import { Carrito } from "../models/Carrito";
+
+import { carritoHuevos, prodHuevos } from "../models/File";
+import { CarritoType, ProductoType } from "../utils/interface";
+
 
 
 
@@ -14,19 +13,21 @@ export const getCarrito = async (
 	next: NextFunction
 ) => {
 	// /listar/:id?
-	let { body, params } = req;
+	let { params } = req;
+
 	try {
-		const datosCarrito = (await carritoHuevos.readFile()) as CarritoType;
-		if (params.id !== undefined) {
-			let arr = datosCarrito.producto.filter(
+		const datosCarrito = await carritoHuevos.readFile() as CarritoType[]
+		if (params.id) {
+			let arr = datosCarrito[0].producto.filter(
 				(prod) => prod.id === parseInt(params.id)
-			); // agregar para manejar errores
+			);
+
 			res.status(202).json(arr);
 		} else {
 			res.status(202).json(datosCarrito);
 		}
 	} catch {
-		next(new BadErrorHandler({}));
+		next();
 	}
 };
 
@@ -37,14 +38,14 @@ export const postCarrito = async (
 ) => {
 	//	/agregar/:id_producto"
 	try {
-		let { body, params } = req;
-		const datosCarrito = (await carritoHuevos.readFile()) as CarritoType;
+		let { params } = req;
+		const datosCarrito = (await carritoHuevos.readFile()) as CarritoType[];
 		const datosProductos = (await prodHuevos.readFile()) as Array<ProductoType>;
 		let arrProd = datosProductos.filter(
 			(prod) => prod.id === parseInt(params.id_producto)
 		);
 		if (arrProd.length > 0) {
-			datosCarrito.producto.push(arrProd[0]);
+			datosCarrito[0].producto.push(arrProd[0]);
 			await carritoHuevos.writeFile(datosCarrito);
 			res.json(datosCarrito);
 		} else {
@@ -59,7 +60,7 @@ export const postCarrito = async (
 		// res.json(newCarrito);
 		// datosCarrito[0].producto.push(arrProd)
 	} catch {
-		next(new BadErrorHandler({}));
+		next();
 	}
 };
 
@@ -70,7 +71,7 @@ export const deleteCarrito = async (
 	next: NextFunction
 ) => {
 	//	/borrar/:id
-	let { body, params } = req;
+	let { params } = req;
 	try {
 		const datosCarrito = (await carritoHuevos.readFile()) as Array<CarritoType>;
 
@@ -88,6 +89,6 @@ export const deleteCarrito = async (
 			});
 		}
 	} catch {
-		next(new BadErrorHandler({}));
+		next();
 	}
 };

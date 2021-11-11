@@ -3,7 +3,7 @@ import { Server, Socket } from "socket.io";
 
 import app from "./app"
 import { serverConfig } from "./constants/config"
-import { ioSocket } from "./controlers/chat.controler";
+import { ioSocket } from "./controlers/IoSocket.controler";
 
 const PORT = serverConfig.PORT || 8080
 
