@@ -38,6 +38,7 @@ export const PRODUCTOS: Array<ProductoType> = [
 		stock: 12,
 	},
 ];
+
 export const CARRITO :Array<CarritoType> = [
     {
         id: 1,
