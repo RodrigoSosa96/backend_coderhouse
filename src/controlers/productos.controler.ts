@@ -132,3 +132,11 @@ export const deleteProductos = async (
 
 };
 
+
+export const productosMain = async (
+	_req: Request,
+	res: Response,
+) => {
+	res.render("index", { producto: PRODUCTOS, existe: true });
+}
+

@@ -38,6 +38,27 @@ export const PRODUCTOS: Array<ProductoType> = [
 		stock: 12,
 	},
 ];
+export const PRODUCTOSA = [
+    {
+        id: 1,
+        title: "Huevos",
+        price:  10,
+        thumbnail: "https://upload.wikimedia.org/wikipedia/en/5/58/Instagram_egg.jpg",
+    },
+    {
+        id: 2,
+        title: "Huevos fritos",
+        price: 30,
+        thumbnail: "https://cookieandkate.com/images/2018/09/crispy-fried-egg-recipe-550x824.jpg"
+    },
+    {
+        id: 3,
+        title: "Huevos poche",
+        price: 200,
+        thumbnail: "https://i.blogs.es/fd0648/pexels-photo-704571-1024/1366_2000.jpg"
+    }
+]
+
 export const CARRITO :Array<CarritoType> = [
     {
         id: 1,

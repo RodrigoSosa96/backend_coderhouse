@@ -1,10 +1,11 @@
 import { Router } from "express";
-import { getProductos, postProductos, putProductos, deleteProductos } from "../controlers/productos.controler";
+import { getProductos, postProductos, putProductos, deleteProductos, productosMain} from "../controlers/productos.controler";
 
 
 const routerProductos = Router();
 
 routerProductos
+	.get("/", productosMain)// arreglar
 	.get("/listar/:id?", getProductos)
 	.post("/agregar", postProductos)			//Admin
 	.put("/actualizar/:id", putProductos)		//Admin

@@ -74,11 +74,11 @@ export const deleteCarrito = async (
 	try {
 		const datosCarrito = (await carritoHuevos.readFile()) as Array<CarritoType>;
 
-		let objIndex = datosCarrito.producto.findIndex(
+		let objIndex = datosCarrito[0].producto.findIndex(
 			(obj) => obj.id == parseInt(params.id)
 		);
 		if (objIndex !== -1) {
-			datosCarrito.producto.splice(objIndex, 1);
+			datosCarrito[0].producto.splice(objIndex, 1);
 			await carritoHuevos.writeFile(datosCarrito);
 			res.json(datosCarrito);
 		} else {
