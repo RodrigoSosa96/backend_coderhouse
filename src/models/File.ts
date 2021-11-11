@@ -1,6 +1,8 @@
 import * as fs from "fs/promises";
 import * as path from "path";
 
+
+//!	Arreglar en caso que no exista el archivo
 class FileManager {
 	private _directory: string = path.resolve(__dirname, "../../files");
 	private readonly _file: string;
