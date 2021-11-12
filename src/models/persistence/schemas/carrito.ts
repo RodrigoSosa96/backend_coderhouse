@@ -2,7 +2,7 @@ import { Schema, model } from 'mongoose';
 
 
 interface Carrito {
-    timestamp: Date;
+    timestamp: string;
     nombre: string;
     descripcion: string;
     codigo: string;
@@ -11,15 +11,16 @@ interface Carrito {
     stock: number;
 }
 
-const Carrito = new Schema({
-    timestamp: { type: Date, default: Date.now },
+const Carrito = new Schema<Carrito>({
+    timestamp: { type: String, required: true },
     nombre: { type: String, required: true },
     descripcion: { type: String, required: true },
     codigo: { type: String, required: true },
     foto: { type: String, required: true },
     precio: { type: Number, required: true },
     stock: { type: Number, required: true }
-});
+}, { timestamps: true } //? testar
+);
 
 
-export default model('carrito', Carrito);
+export default model<Carrito>("carrito", Carrito);
