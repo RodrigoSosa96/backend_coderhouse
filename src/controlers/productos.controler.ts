@@ -92,19 +92,19 @@ export const putProductos = async (
 			next(new BadErrorHandler({ statusCode: 404 }));
 		}
 	} else {
-		next(new BadErrorHandler({ statusCode: 401 , metodo : "PUT", message : "No tienes permisos para actualizar productos"}));
+		next(new BadErrorHandler({ statusCode: 401, metodo: "PUT", message: "No tienes permisos para actualizar productos" }));
 	}
-		// const existe = await productos.updateItem(params.id, updateProduct)
-		// if (existe !== 0) {
-		// 	const lastProd = await productos.getItems(params.id)
-		// 	res.status(201).json(lastProd)
-		// }
-		// else {
-		// 	res.status(403).json({
-		// 		error: -1,
-		// 		descripcion: "Id del archivo no valida",
-		// 	});
-		// }
+	// const existe = await productos.updateItem(params.id, updateProduct)
+	// if (existe !== 0) {
+	// 	const lastProd = await productos.getItems(params.id)
+	// 	res.status(201).json(lastProd)
+	// }
+	// else {
+	// 	res.status(403).json({
+	// 		error: -1,
+	// 		descripcion: "Id del archivo no valida",
+	// 	});
+	// }
 
 };
 
@@ -127,7 +127,7 @@ export const deleteProductos = async (
 			next(new BadErrorHandler({ statusCode: 404 }));
 		}
 	} else {
-		next(new BadErrorHandler({ statusCode: 401 , metodo : "DELETE"}));
+		next(new BadErrorHandler({ statusCode: 401, metodo: "DELETE" }));
 	}
 	// 	const deleteProductos = await db.deleteItem("productos", Number(params.id));
 	// 	if (deleteProductos !== 0) {
@@ -148,9 +148,13 @@ export const deleteProductos = async (
 
 
 export const productosMain = async (
-	_req: Request,
+	req: Request,
 	res: Response,
 ) => {
-	res.render("index", { producto: PRODUCTOS, existe: true });
+	if (req.session.logged) {
+		res.render("index", { producto: PRODUCTOS, login: true });
+	} else if (!req.session.logged) {
+		res.render("index", { producto: PRODUCTOS, login: false });
+	}
 }
 
