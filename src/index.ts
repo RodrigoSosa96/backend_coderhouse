@@ -1,11 +1,10 @@
-import { createServer } from "http";
-import { Server, Socket } from "socket.io";
-
+import "dotenv/config"
 import app from "./app"
-import { serverConfig } from "./constants/config"
-// import { ioSocket } from "./controlers/IoSocket.controler";
+import { createServer } from "http";
+import { Server } from "socket.io";
+import { serverConfig } from "./configs"
+import { ioSocket } from "./controllers/IoSocket.controller";
 import DBConnection from "./models/persistence/DBConnection";
-import { Database } from "./models/persistence/_AbstractClass";
 
 
 const PORT = serverConfig.PORT || 8080
@@ -18,7 +17,7 @@ httpServer.listen(PORT, async (): Promise<any> => {
 	const DIR = `http://localhost:${PORT}`;
 	console.log(`Servidor corriendo en ${DIR}`);
 	db.instance.initSchemas()
-		.then((res:any) => console.log(res))
+		.then((res: any) => console.log(res))
 		.catch((err) => console.log(err.message));
 });
 

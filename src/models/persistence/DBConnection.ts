@@ -1,9 +1,7 @@
-import { classes } from './index.js';
-import { configs } from '../../configs';
+import { Memory, FileSystem, MySql, MongoDB, Firebase } from './index.js';
 import { Database } from './_AbstractClass.js';
+import { mySqlOptions, sqliteOptions, mongoDbConfigs } from '../../configs';
 
-const { Memory, FileSystem, MySql, MongoDB, Firebase } = classes;
-const { mySqlOptions, sqliteOptions, mongoDbConfigs } = configs;
 
 
 export default class DBConnection{
@@ -37,12 +35,4 @@ export default class DBConnection{
         }
     }
 }
-// const test = async () => {
-//     const db = new DBConnection("1");
-//     await db.instance.initSchemas();
-//     const result = await db.instance.addItem("carrito", {
-//         id: "2",
-//         name: "test",
-//         price: "1"  });
-//     console.log(result);
-// }
+

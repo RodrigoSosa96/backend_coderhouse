@@ -3,9 +3,10 @@ import { Producto } from "../models/ecommerce/Producto"
 
 faker.setLocale("es_MX")
 faker.seed(245665)
-export const fakeProductos = (): Producto[] => {
+
+export const mockProductos = (): Producto[] => {
     const productos: Producto[] = []
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 5; i++) {
         productos.push(
             new Producto(
                 faker.commerce.productName(),
@@ -21,7 +22,7 @@ export const fakeProductos = (): Producto[] => {
 }
 
 // faker.internet.email()
-const fakeAuthors = (num: number): object[] => {
+const mockAuthors = (num: number): object[] => {
     const authors: object[] = []
     for (let i = 0; i < num; i++) {
         authors.push({
@@ -35,10 +36,11 @@ const fakeAuthors = (num: number): object[] => {
     }
     return authors
 }
-const test = fakeAuthors(3)
 
 
-export const fakeMensajes = (): any[] => {
+const test = mockAuthors(3)
+
+export const mockMensajes = (): any[] => {
     const mensajes: any[] = []
     for (let i = 0; i < 100; i++) {
         mensajes.push({

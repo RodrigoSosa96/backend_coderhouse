@@ -1,43 +1,65 @@
 import mongoose from 'mongoose';
 
-import { Database } from "./_AbstractClass";
-import products from './schemas/products';
+import { Database, TableName } from "./_AbstractClass";
+import productos from './schemas/productos';
 import carrito from './schemas/carrito';
+import mensajes from './schemas/mensajes';
 
-type tableName = "productos" | "carrito";
 export default class MongoDB extends Database {
     public url: any;
     public options: any;
+    private _collection: any = {
+        productos,
+        carrito,
+        mensajes
+    };
     constructor(url: any, options: any) {
         super();
         this.url = url;
         this.options = options;
+
     }
     async initSchemas() {
-        let data: any = mongoose.connect(this.url, this.options);
-        await products.deleteMany({});
-        await carrito.deleteMany({});
-        return `Schemas inicializados en ${data.connections[0].name}`;
+        try {
+            let db: any = await mongoose.connect(this.url, this.options);
+            return `MongoDB Schemas inicializados en ${db.connections[0].host}`;
+        } catch (error) {
+            return error;
+        }
     }
-    async getAll(collection: tableName) {
-		let Collection = collection === 'productos' ? products : carrito;
-		return Collection.find();
+    async getAll(collection: TableName) {
+        let Collection = this._collection[collection];
+        return Collection.find();
     }
-    async getById(collection: tableName, id: string) {
-        let Collection = collection === 'productos' ? products : carrito;
+    async getById(collection: TableName, id: string) {
+        let Collection = this._collection[collection];
         return Collection.findById(id);
     }
-    async addItem(collection: tableName, item: any) {
-        let Collection = collection === 'productos' ? products : carrito;
-        return Collection.create(item);
+    async addItem(collection: TableName, item: any) {
+        try {
+            let Collection = this._collection[collection];
+            return Collection.create(item);
+        } catch (error) {
+            console.log(error);
+        }
     }
-    async updateItem(collection: tableName, id: string, item: any) {
-        let Collection = collection === 'productos' ? products : carrito;
-        return Collection.findByIdAndUpdate(id, item);
+    async updateItem(collection: TableName, id: string, item: any) {
+        try {
+            let Collection = this._collection[collection];
+            return Collection.findByIdAndUpdate(id, item, { new: true });
+        } catch (error) {
+            console.log(error);
+        }
     }
-    async deleteItem(collection: tableName, id: string) {
-        let Collection = collection === 'productos' ? products : carrito;
-        return Collection.findByIdAndDelete(id);
+    async deleteItem(collection: TableName, id: string) {
+        try {
+            let Collection = this._collection[collection];
+            return Collection.findByIdAndDelete(id);
+        } catch (error) {
+            console.log(error);
+        }
     }
-
+    private async _disconnect(): Promise<void> {
+        return mongoose.disconnect();
+    }
 }

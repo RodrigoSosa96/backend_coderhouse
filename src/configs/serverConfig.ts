@@ -5,8 +5,10 @@ import * as path from "path";
 config({ path: path.resolve(__dirname, "../../.env") });
 
 
-export const serverConfig = {
+const serverConfig = {
 	admin: true,
 	hostNanme: "http://localhost:8080",
 	PORT: parseInt(process.env.PORT as string),
 };
+
+export default serverConfig;

@@ -24,4 +24,4 @@ const MensajesSchema = new Schema<Mensajes>({
     message: {type: String, trim: true, lowercase: true, required:[true, "Message is required"]}
 });
 
-export default model<Mensajes>('Mensajes', MensajesSchema);
+export default model<Mensajes>('mensajes', MensajesSchema);

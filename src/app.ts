@@ -1,18 +1,14 @@
 import Express, { Application, NextFunction, Request, response, Response } from "express";
 import handlebars from "express-handlebars";
 import path from "path";
-import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import session from "express-session";
 import MongoStore from "connect-mongo";
 
-import { PRODUCTOS } from "./backups";
-import { errorHandlerMiddleware } from "./middlewares/errorHandlerMiddleware";
 import routerCarrito from "./routes/carrito.routes";
 import routerProductos from "./routes/productos.routes";
-// import { BadErrorHandler } from "./utils/Errors";
+import routerMockData from "./routes/mockData.routes";
 
-dotenv.config();
 
 
 const app: Application = Express();
@@ -42,15 +38,20 @@ app.use(session({
 
 
 
-
 const auth = (req: Request, res: Response, next: NextFunction) => {
 	if (req.session?.logged) return next() //req.session?.admin
 	else return res.render("index", { producto: {}, existe: false });
 
 }
+
+
+/**
+ * * Rutas
+ */
 app.use(Express.static(path.join(__dirname, "../public")));
 app.use("/productos", routerProductos);
 app.use("/carrito", routerCarrito);
+app.use("/mockdata", routerMockData);
 
 
 // Motor de plantillas
