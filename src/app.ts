@@ -23,8 +23,9 @@ const auth = (req: Request, res: Response, next: NextFunction) => {
 	return res.status(401).redirect("/user");
 }
 
-app.use((req: Request, _res: Response, next: NextFunction) => {
-	if (req.session?.contador) {
+app.use((req: Request, res: Response, next: NextFunction) => {
+	if (req.session?.contador ) {
+		// res.locals.logged = req.session.logged;
 		req.session.contador++;
 		next();
 	} else {

@@ -14,13 +14,15 @@ declare module 'express-session' {
 
 
 export const main = async (req: Request, res: Response) => {
-    if (req.session.logged) {
-    req.session.contador += 1
-        res.render('login', {
-            logged: true,
-            user: req.session.user,
-            contador: req.session.contador
-        })
+    if (req.session.logged && req.session.contador) {
+        req.session.contador += 1
+        res.render('login'
+            // {
+            //     logged: true,
+            //     user: req.session.user,
+            //     contador: req.session.contador
+            // }
+        )
     } else {
         res.render('login', {
             logged: false

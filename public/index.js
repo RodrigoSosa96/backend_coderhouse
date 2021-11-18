@@ -28,8 +28,7 @@ loginForm.addEventListener('submit', (e) => {
             } else {
                 messageError.classList.add('d-none');
                 console.log('login success');
-                // window.location.href = '/';
-                window.location.reload();
+                window.location.href = '/';
             }
         })
         .catch((err) => {
@@ -37,22 +36,22 @@ loginForm.addEventListener('submit', (e) => {
         });
 });
 
-// logoutButton.addEventListener('click', (e) => {
-//     e.preventDefault();
-//     fetch('/user/logout', {
-//         method: 'POST',
-//     })
-//         .then((res) => res.json())
-//         .then((res) => {
-//             console.log(res);
-//             if (!res.ok) {
-//                 console.log(res.message);
-//             } else {
-//                 console.log(res.message);
-//                 // window.location.reload();
-//             }
-//         })
-//         .catch((err) => {
-//             console.log("err");
-//         });
-// });
+logoutButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    fetch('/user/logout', {
+        method: 'POST',
+    })
+        .then((res) => res.json())
+        .then((res) => {
+            console.log(res);
+            if (!res.ok) {
+                console.log(res.message);
+            } else {
+                console.log(res.message);
+                // window.location.reload();
+            }
+        })
+        .catch((err) => {
+            console.log("err");
+        });
+});
