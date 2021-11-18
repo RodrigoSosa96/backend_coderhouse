@@ -1,8 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import { BadErrorHandler } from "../utils/Errors";
 
 
-export const errorHandlerMiddleware = (err:BadErrorHandler, req:Request, res:Response, next:NextFunction) => {
+export const errorHandlerMiddleware = (err:any, req:Request, res:Response, next:NextFunction) => {
 	if (!err) return res.status(409).json({ message: "conflict" });
 
 	if(err.statusCode === 401) {

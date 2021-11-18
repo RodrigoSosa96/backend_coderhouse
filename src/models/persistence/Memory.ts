@@ -1,37 +1,39 @@
-import { Database } from "./_AbstractClass";
+import { Database, TableName } from "./_AbstractClass";
 
-type tableName = "productos" | "carrito"
 export default class Memory extends Database {
-    protected data: any;
+    private _data: any;
     constructor() {
         super();
-        this.data = [];
-    }
-    test() {
-        return "chau"
+        this._data = [];
     }
     async initSchemas() {
-        this.data.productos = [];
-		this.data.carrito = [];
+        this._data.productos = [];
+		this._data.carrito = [];
+        this._data.mensajes =[];
 		return 'Arrays en memoria inicializados';
     }
-    async getAll(table: tableName) {
-        return this.data[table];
+    async getAll(table: TableName) {
+        return this._data[table];
     }
-    async getById(table: tableName, id: string) {
-        return this.data[table].find((item:any) => item.id === id);
+    async getById(table: TableName, id: string) {
+        return this._data[table].find((item:any) => item.id === id);
     }
-    async addItem(table: tableName, item: any) {
-        this.data[table].push(item);
-
+    async addItem(table: TableName, item: any) {
+        if(!item.length) item = [item];
+        item.forEach((i:any) => {
+            i.id = this.generateId();
+            this._data[table].push(i);
+        });
     }
-    async updateItem(table: tableName, item: any) {
-        const index = this.data[table].findIndex((i:any) => i.id === item.id);
-        this.data[table][index] = item;
+    async updateItem(table: TableName, item: any) {
+        const index = this._data[table].findIndex((i:any) => i.id === item.id);
+        if(index === -1) return
+        this._data[table][index] = item;
+        return this._data[table][index];
     }
-    async deleteItem(table: tableName, id: string) {
-        const index = this.data[table].findIndex((i:any) => i.id === id);
-        this.data[table].splice(index, 1);
+    async deleteItem(table: TableName, id: string) {
+        const index = this._data[table].findIndex((i:any) => i.id === id);
+        this._data[table].splice(index, 1);
     }
 
 }

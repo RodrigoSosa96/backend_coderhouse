@@ -1,54 +1,64 @@
 import * as fs from "fs/promises";
 import * as path from "path";
 
-import { Database } from "./_AbstractClass";
+import { Database, TableName } from "./_AbstractClass";
 
-type tableName = "productos" | "carrito"
 export default class FileSystem extends Database {
     private readonly rootPath: string// =  path.resolve(__dirname, "../../files");
     private readonly _productos: string = "productos.json"
     private readonly _carrito: string = "carrito.json"
+    private readonly _mensajes: string = "mensajes.json"
     constructor(pathDIR: string) {
         super();
         this.rootPath = path.resolve(__dirname, pathDIR);
     }
-    public async initSchemas(): Promise<void> {
+    public async initSchemas() {
         try {
-            await fs.mkdir(this.rootPath, { recursive: true });
-            await fs.writeFile(path.join(this.rootPath, this._productos), JSON.stringify([]));
-            await fs.writeFile(path.join(this.rootPath, this._carrito), JSON.stringify([]));
+            const files = await fs.readdir(this.rootPath);
 
+            if (files.length !== 3) {
+                await fs.mkdir(this.rootPath, { recursive: true });
+                await fs.writeFile(path.join(this.rootPath, this._productos), JSON.stringify([]));
+                await fs.writeFile(path.join(this.rootPath, this._carrito), JSON.stringify([]));
+                await fs.writeFile(path.join(this.rootPath, this._mensajes), JSON.stringify([]));
+                return "FileSystem: Se crearon los archivos";
+            }
+            return "FileSystem: Los archivos ya existen";
         } catch (error) {
             throw error;
         }
     }
-    public async getAll(tableName: tableName): Promise<any[]> {
+    public async getAll(tableName: TableName): Promise<any[]> {
         const data = await fs.readFile(path.join(this.rootPath, tableName + ".json"), "utf-8");
         return JSON.parse(data);
     }
 
-    public async getById(tableName: tableName, id: string): Promise<any> {
+    public async getById(tableName: TableName, id: string): Promise<any> {
         const data = await this.getAll(tableName);
         return data.find(item => item.id === id);
     }
 
-    public async addItem(tableName: tableName, item: any): Promise<any> {
+    public async addItem(tableName: TableName, item: any): Promise<any> {
+        if(!item.length) item = [item];
         const data = await this.getAll(tableName);
-        item.id = data.length + 1;
-        data.push(item);
+        item.forEach((element: any) => {
+            element.id = this.generateId();
+            data.push(element);
+        });
         await fs.writeFile(path.join(this.rootPath, tableName + ".json"), JSON.stringify(data));
         return item;
     }
 
-    public async updateItem(tableName: tableName, id: string, item: any): Promise<any> {
+    public async updateItem(tableName: TableName, id: string, item: any): Promise<any> {
         const data = await this.getAll(tableName);
         const index = data.findIndex(item => item.id === id);
-        data[index] = item;
+        if(index === -1) return;
+        data[index] = { ...data[index], ...item };
         await fs.writeFile(path.join(this.rootPath, tableName + ".json"), JSON.stringify(data));
-        return item;
+        return data[index];
     }
 
-    public async deleteItem(tableName: tableName, id: string): Promise<void> {
+    public async deleteItem(tableName: TableName, id: string): Promise<void> {
         const data = await this.getAll(tableName);
         const index = data.findIndex(item => item.id === id);
         data.splice(index, 1);

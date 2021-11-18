@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backend - Rodrigo Sosa</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="socket.io/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/normalizr@3.6.1/dist/normalizr.browser.min.js"
+        integrity="sha256-qQvNv3XFs75Z4rVX8mxyydxpvBhD9/hRsMJzmVQRbUI=" crossorigin="anonymous"></script>
+</head>
+<body>
+    {{> _header}}
+    <main>
+    {{{body}}}
+    </main>
+    {{> _footer}}
+    <script src="/index.js"></script>
+</body>
+</html>

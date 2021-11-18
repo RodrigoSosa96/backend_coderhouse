@@ -1,13 +1,5 @@
-import Firebase from "./Firebase";
-import MongoDB from "./MongoDB";
-import FileSystem from "./FileStystem";
-import MySql from "./MySql";
-import Memory from "./Memory";
-
-export const classes = {
-	Memory,
-	FileSystem,
-	MySql,
-	MongoDB,
-	Firebase,
-};
+export {default as Firebase} from "./Firebase";
+export {default as MongoDB} from "./MongoDB";
+export {default as FileSystem} from "./FileStystem";
+export {default as MySql} from "./MySql";
+export {default as Memory} from "./Memory";

@@ -1,129 +1,155 @@
-@import url(https://fonts.googleapis.com/css?family=Roboto:400,300,600,400italic);
-* {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	-webkit-font-smoothing: antialiased;
-	-moz-font-smoothing: antialiased;
-	-o-font-smoothing: antialiased;
-	font-smoothing: antialiased;
-	text-rendering: optimizeLegibility;
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@600&family=Roboto+Mono:wght@408&display=swap');
+
+:root {
+    --color-base0: #0d1117;
+    --color-base1: #161b22;
+    --color-base2: #21262d;
+    --color-base3: #89929b;
+    --color-base4: #c6cdd5;
+    --color-base5: #ecf2f8;
+    --color-red: #fa7970;
+    --color-orange: #faa356;
+    --color-green: #7ce38b;
+    --color-lightblue: #a2d2fb;
+    --color-blue: #77bdfb;
+    --color-purp: #cea5fb;
+    --color-none: #000000;
+    --font-code: 'Inconsolata', monospace;
+    --font-text: 'Roboto Mono', monospace;
+}
+/* reset css */
+*:where(:not(iframe, canvas, img, svg, video):not(svg *)) {
+    all: unset;
+    display: revert;
+}
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+ol, ul {
+    list-style: none;
+}
+img {
+    max-width: 100%;
+}
+table {
+    border-collapse: collapse;
+}
+textarea {
+    white-space: revert;
+}
+a {
+    all: unset;
 }
 
 body {
-	font-family: "Roboto", Helvetica, Arial, sans-serif;
-	font-weight: 100;
-	font-size: 12px;
-	line-height: 30px;
-	color: #777;
-	background: #4caf50;
+    background-color: var(--color-base0);
+    color: var(--color-base5);
+    font-family: var(--font-text);
+}
+header {
+    background-color: var(--color-base1);
+    color: var(--color-base5);
+    /* sticky flex navbar */
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1rem;
+}
+header h1 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0;
+}
+header .page-links {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+    text-decoration:line-through;
+}
+footer {
+    background-color: var(--color-base1);
+    color: var(--color-base5);
+    position: sticky;
+    bottom: 0;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1rem;
 }
 
-.contenedor {
-	max-width: 400px;
-	width: 100%;
-	margin: 0 auto;
-	position: relative;
+main {
+    background-color: var(--color-base2);
+    color: var(--color-base5);
+    padding: 1rem;
+    height: 200vh;
 }
 
-.contact input[type="text"],
-.contact input[type="number"],
-.contact button[type="submit"] {
-	font: 400 12px/16px "Roboto", Helvetica, Arial, sans-serif;
+/* login form card center and styled */
+.login-card {
+    background-color: var(--color-base1);
+    color: var(--color-base5);
+    padding: 1rem;
+    border-radius: 0.2rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.5);
+    width: 30rem;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+    align-items: center;
+    font-family: var(--font-code);
+    font-size: large;
+    height: 350px;
+    
+}
+.login-card input {
+    width: 100%;
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+    border: none;
+    border-radius: 0.2rem;
+    background-color: var(--color-base3);
+    color: var(--color-base5);
+}
+.login-card h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0;
+}
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.login-card input:focus {
+    outline: none;
+    
+}  
+.login-card button {
+    width: 100%;
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+    border: none;
+    border-radius: 0.5rem;
+    background-color: var(--color-base3);
+    color: var(--color-base5);
+    cursor: pointer;
+}
+.login-card button:hover {
+    background-color: var(--color-base4);
 }
 
-.contact {
-	background: #f9f9f9;
-	padding: 25px;
-	margin: 150px 0;
-	box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
-}
-
-.contact h3 {
-	display: block;
-	font-size: 30px;
-	font-weight: 300;
-	margin-bottom: 10px;
-}
-
-.contact h4 {
-	margin: 5px 0 15px;
-	display: block;
-	font-size: 13px;
-	font-weight: 400;
-}
-
-fieldset {
-	border: medium none;
-	margin: 0 0 10px;
-	min-width: 100%;
-	padding: 0;
-	width: 100%;
-}
-
-.contact input[type="text"],
-.contact input[type="number"] {
-	width: 100%;
-	border: 1px solid #ccc;
-	background: #fff;
-	margin: 0 0 5px;
-	padding: 10px;
-}
-
-.contact input[type="text"]:hover,
-.contact input[type="number"]:hover {
-	-webkit-transition: border-color 0.3s ease-in-out;
-	-moz-transition: border-color 0.3s ease-in-out;
-	transition: border-color 0.3s ease-in-out;
-	border: 1px solid #aaa;
-}
-
-.contact button[type="submit"] {
-	cursor: pointer;
-	width: 100%;
-	border: none;
-	background: #4caf50;
-	color: #fff;
-	margin: 0 0 5px;
-	padding: 10px;
-	font-size: 15px;
-}
-
-.contact button[type="submit"]:hover {
-	background: #43a047;
-	-webkit-transition: background 0.3s ease-in-out;
-	-moz-transition: background 0.3s ease-in-out;
-	transition: background-color 0.3s ease-in-out;
-}
-
-.contact button[type="submit"]:active {
-	box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
-}
-
-.contact input:focus {
-	outline: 0;
-	border: 1px solid #aaa;
-}
-
-::-webkit-input-placeholder {
-	color: #888;
-}
-
-:-moz-placeholder {
-	color: #888;
-}
-
-::-moz-placeholder {
-	color: #888;
-}
-
-:-ms-input-placeholder {
-	color: #888;
-}
-
-
-.container {
-	background-color: white;
+.login-card input[type="submit"] {
+    background-color: var(--color-base0);
+    color: var(--color-base5);
+    cursor: pointer;
+    text-align: center;
 }

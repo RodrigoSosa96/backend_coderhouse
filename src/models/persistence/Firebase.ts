@@ -1,4 +1,4 @@
-import { Database } from "./_AbstractClass";
+import { Database, TableName } from "./_AbstractClass";
 import admin, { ServiceAccount } from 'firebase-admin';
 
 const {DATABASE_URL} = process.env;
@@ -15,10 +15,8 @@ const serviceAccount  = {
 		process.env.GOOGLE_APPLICATION_CREDENTIALS_auth_provider,
 	client_x509_cert_url: process.env.GOOGLE_APPLICATION_CREDENTIALS_client,
 } as ServiceAccount;
-
-type tableName = "productos" | "carrito"
 export default class Firebase extends Database {
-    private firebase  = admin;
+    private _firestore  = admin.firestore;
     constructor() {
         super();
     }
@@ -31,26 +29,39 @@ export default class Firebase extends Database {
         // return `Conexión exitosa a ${firebase.options.credential.projectId}`;
         return `Conexión exitosa a ${firebase.options.databaseURL}`;
     }
-    async getAll(collection: tableName) {
-        let data = await this.firebase.firestore().collection(collection).get();
+    async getAll(collection: TableName) {
+        let data = await this._firestore().collection(collection).get();
         let result:any = [];
         data.forEach((doc:any) => {
             result.push(doc.data());
         });
         return result;
     }
-    async getById(collection: tableName, id: string) {
-        let data = await this.firebase.firestore().collection(collection).doc(id).get();
+    async getById(collection: TableName, id: string) {
+        let data = await this._firestore().collection(collection).doc(id).get();
         return data.data();
     }
-    async addItem(collection: tableName, data: any) {
-        await this.firebase.firestore().collection(collection).add(data);
+
+    async addItem(collection: TableName, data: any) {
+        try {
+            if(!data.length) data = [data];
+            await data.forEach((item:any) => {
+                this._firestore().collection(collection).add({...item});
+            });
+        } catch (error) {
+            return error;
+        }
     }
-    async updateItem(collection: tableName, id: string, data: any) {
-        await this.firebase.firestore().collection(collection).doc(id).update(data);
+    async updateItem(collection: TableName, id: string, data: any) {
+        try {
+            await this._firestore().collection(collection).doc(id).update({...data});
+            return this.getById(collection, id);
+        } catch (error) {
+            return;
+        }
     }
-    async deleteItem(collection: tableName, id: string) {
-        await this.firebase.firestore().collection(collection).doc(id).delete();
+    async deleteItem(collection: TableName, id: string) {
+        await this._firestore().collection(collection).doc(id).delete();
     }
 
 }

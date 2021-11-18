@@ -1,7 +1,7 @@
 import util from 'util';
 import { denormalize, normalize, schema } from "normalizr";
 
-import { fakeMensajes } from './faker';
+import { mockMensajes } from './mockData';
 
 
 function print(data: object) {
@@ -19,7 +19,7 @@ function print(data: object) {
 
 
 
-const test = fakeMensajes()
+const test = mockMensajes()
 
 const user = new schema.Entity("users", {}, { idAttribute: "mail" });
 const message = new schema.Entity("messages", { author: user }, { idAttribute: "_id" });
