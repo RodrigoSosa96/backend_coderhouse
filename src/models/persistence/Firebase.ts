@@ -25,8 +25,6 @@ export default class Firebase extends Database {
             credential: admin.credential.cert(serviceAccount),
             databaseURL: DATABASE_URL,
         });
-        
-        // return `Conexión exitosa a ${firebase.options.credential.projectId}`;
         return `Conexión exitosa a ${firebase.options.databaseURL}`;
     }
     async getAll(collection: TableName) {

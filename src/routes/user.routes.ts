@@ -1,10 +1,11 @@
 import { Router } from "express";
-import {login, logout} from "../controllers/user.controller"; 
+import {login, logout, main} from "../controllers/user.controller"; 
 const user = Router();
 
 user
-    .get("/login", login)
-    .get("/logout", logout)
+    .get("/", main) 
+    .post("/login", login)
+    .post("/logout", logout)
 
 
 export default user;

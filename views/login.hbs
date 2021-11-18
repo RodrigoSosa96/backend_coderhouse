@@ -1,16 +1,24 @@
 <div class="login-card">
-    <h2>Login</h2>
-    <form action="/login/test" method="get" id="loginForm">
-        <div>
-            <label for="username">Username:</label>
-            <input type="text" name="username" id="username" />
-        </div>
-        <div>
-            <label for="password">Password:</label>
-            <input type="password" name="password" id="password" />
-        </div>
-        <div>
-            <input type="submit" value="Login" />
-        </div>
-    </form>
+    {{#if logged}}
+        <h2>Bienvenido {{user}}</h2>
+        <p>Esta es la {{contador}} vez que en este sitio</p>
+        <a href="/logout">Logout</a>
+    {{else}}
+        <h2>Login</h2>
+        <p>User: Alex Password: 20605</p>
+        <p class="wrong-pass d-none">Contraseña incorrecta</p>
+        <form action="/user/login" method="get" id="login-form">
+            <div>
+                <label for="username">Username:</label>
+                <input type="text" name="username" id="username" />
+            </div>
+            <div>
+                <label for="password">Password:</label>
+                <input type="password" name="password" id="password" />
+            </div>
+            <div>
+                <button>Login</button>
+            </div>
+        </form>
+    {{/if}}
 </div>

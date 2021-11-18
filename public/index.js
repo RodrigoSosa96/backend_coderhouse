@@ -1,31 +1,58 @@
-// const login_form = document.querySelector('#loginForm');
+const loginForm = document.querySelector('#login-form');
+const loginButton = document.querySelector('#login-button');
+const messageError = document.querySelector('.wrong-pass');
+const logoutButton = document.querySelector('#logout-button');
 
-// // enviar formulario login por ajax
-// login_form.addEventListener('submit', (e) => {
+loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const username = loginForm.username.value;
+    const password = loginForm.password.value;
+    const data = {
+        username,
+        password,
+    };
+    fetch('/user/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+        .then((res) => res.json())
+        .then((res) => {
+            console.log(res);
+            if (!res.ok) {
+                messageError.classList.remove('d-none');
+                console.log(res.message);
+
+            } else {
+                messageError.classList.add('d-none');
+                console.log('login success');
+                // window.location.href = '/';
+                window.location.reload();
+            }
+        })
+        .catch((err) => {
+            console.log("err");
+        });
+});
+
+// logoutButton.addEventListener('click', (e) => {
 //     e.preventDefault();
-//     const form = new FormData(login_form);
-//     const url = login_form.getAttribute('action');
-//     const method = login_form.getAttribute('method');
-//     const data = {};
-//     form.forEach((value, key) => {
-//         data[key] = value;
-//     });
-//     fetch(url, {
-//         method: method,
-//         body: JSON.stringify(data),
-//         headers: {
-//             'Content-Type': 'application/json'
-//         }
+//     fetch('/user/logout', {
+//         method: 'POST',
 //     })
-//         .then(response => response.json())
-//         .then(data => {
-//             // if (data.status === 'success') {
-//             //     window.location.href = data.url;
-//             // } else {
-//             //     alert(data.message);
-//             // }
-//             console.log(data);
+//         .then((res) => res.json())
+//         .then((res) => {
+//             console.log(res);
+//             if (!res.ok) {
+//                 console.log(res.message);
+//             } else {
+//                 console.log(res.message);
+//                 // window.location.reload();
+//             }
 //         })
-//         .catch(error => console.log(JSON.stringify(error)));
-        
+//         .catch((err) => {
+//             console.log("err");
+//         });
 // });

@@ -139,17 +139,19 @@ form {
     margin: 0.5rem 0;
     border: none;
     border-radius: 0.5rem;
-    background-color: var(--color-base3);
-    color: var(--color-base5);
-    cursor: pointer;
-}
-.login-card button:hover {
-    background-color: var(--color-base4);
-}
-
-.login-card input[type="submit"] {
     background-color: var(--color-base0);
     color: var(--color-base5);
     cursor: pointer;
     text-align: center;
+
+}
+.login-card button:hover {
+    background-color: var(--color-base2);
+}
+/* wrong pass alert hide */
+.wrong-pass {
+    background-color: var(--color-red);
+}
+.d-none {
+    display: none;
 }
