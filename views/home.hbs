@@ -1,15 +1,13 @@
 <div>
-{{!-- {{#if login}}
-    <h2>Bienvenido <strong>{{userName}}</strong>!</h2>
-    <form action="/logout" name="logout" method="GET">
-        <button type="submit" class="">Logout</button>
-    </form>
-    {{> form}}
-    {{> table }}
-    {{> chat}}
-{{else}}
-    {{login}}
-{{/if}} --}}
-<h1>Bienvenido</h1>
-
+    {{#if login}}
+        <div class="welcome-banner">
+            <h2>Bienvenido {{user}}</h2>
+            <button>Desloguear</button>
+        </div>
+        {{!-- {{> form}}
+        {{> table}}
+        {{> chat}} --}}
+    {{else}}
+    <h2>loguearse</h2>
+    {{/if}}
 </div>

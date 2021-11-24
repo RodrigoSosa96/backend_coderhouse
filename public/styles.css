@@ -7,6 +7,7 @@
     --color-base3: #89929b;
     --color-base4: #c6cdd5;
     --color-base5: #ecf2f8;
+    --color-new: #282828;
     --color-red: #fa7970;
     --color-orange: #faa356;
     --color-green: #7ce38b;
@@ -70,7 +71,13 @@ header .page-links {
     display: flex;
     align-items: center;
     gap: 2.5rem;
-    text-decoration:line-through;
+}
+header .page-links a {
+    cursor: pointer;
+}
+header .page-links .not-active {
+    text-decoration: line-through;
+    cursor: text;
 }
 footer {
     background-color: var(--color-base1);
@@ -92,7 +99,7 @@ main {
 }
 
 /* login form card center and styled */
-.login-card {
+.form-card {
     background-color: var(--color-base1);
     color: var(--color-base5);
     padding: 1rem;
@@ -107,10 +114,10 @@ main {
     align-items: center;
     font-family: var(--font-code);
     font-size: large;
-    height: 350px;
+    /* height: 350px; */
     
 }
-.login-card input {
+.form-card input {
     width: 100%;
     padding: 0.5rem;
     margin: 0.5rem 0;
@@ -119,7 +126,7 @@ main {
     background-color: var(--color-base3);
     color: var(--color-base5);
 }
-.login-card h2 {
+.form-card h2 {
     font-size: 2rem;
     font-weight: bold;
     margin: 0;
@@ -129,11 +136,11 @@ form {
     flex-direction: column;
     gap: 0.5rem;
 }
-.login-card input:focus {
+.form-card input:focus {
     outline: none;
     
 }  
-.login-card button {
+.form-card button {
     width: 100%;
     padding: 0.5rem;
     margin: 0.5rem 0;
@@ -145,7 +152,7 @@ form {
     text-align: center;
 
 }
-.login-card button:hover {
+.form-card button:hover {
     background-color: var(--color-base2);
 }
 /* wrong pass alert hide */
@@ -154,4 +161,38 @@ form {
 }
 .d-none {
     display: none;
+}
+/* login failed card witrh buttom to return */
+.failed-card {
+    background-color: var(--color-red);
+    color: var(--color-base5);
+    padding: 0.5rem 1rem;
+    border-radius: 0.2rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.5);
+    width: 30rem;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+    align-items: center;
+    font-family: var(--font-code);
+    font-size: large;
+    height: 350px;
+}
+.failed-card h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0;
+}
+.failed-card button {
+    width: 100%;
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+    border: none;
+    border-radius: 0.5rem;
+    background-color: var(--color-base0);
+    color: var(--color-base5);
+    cursor: pointer;
+    text-align: center;
 }

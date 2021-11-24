@@ -4,36 +4,39 @@ import path from "path";
 import cookieParser from 'cookie-parser';
 import session from "express-session";
 import MongoStore from "connect-mongo";
+import passport from "passport";
 
+import auth from "./middlewares/auth.middleware";
 import routerCarrito from "./routes/carrito.routes";
 import routerProductos from "./routes/productos.routes";
 import routerMockData from "./routes/mockData.routes";
-import routerUser from "./routes/user.routes";
+// import routerUser from "./routes/login.routes";
 import mongoConfig from "./configs/mongoDB";
+import login from "./routes/user/login.routes";
+import logout from "./routes/user/logout.routes";
+import signUp from "./routes/user/signup.routes";
+import User from "./models/user/User";
 
 
 const app: Application = Express();
 
-//	Middlewares
+/**
+ ** Middlewares
+ */
 app.use(Express.json());
 app.use(Express.urlencoded({ extended: true }));
-const auth = (req: Request, res: Response, next: NextFunction) => {
-	if (req.session.logged) return next() //req.session?.admin
-	// else return res.render("index", { producto: {}, existe: false });
-	return res.status(401).redirect("/user");
-}
 
-app.use((req: Request, res: Response, next: NextFunction) => {
-	if (req.session?.contador ) {
-		// res.locals.logged = req.session.logged;
-		req.session.contador++;
-		next();
-	} else {
-		next();
-	}
-});
 
-//Cookie session con mongo
+// app.use((req: Request, res: Response, next: NextFunction) => {
+// 	if (req.session?.contador ) {
+// 		// res.locals.logged = req.session.logged;
+// 		req.session.contador++;
+// 		next();
+// 	} else {
+// 		next();
+// 	}
+// });
+
 app.use(cookieParser());
 app.use(session({
 	store: new MongoStore({
@@ -43,22 +46,37 @@ app.use(session({
 	resave: false,
 	saveUninitialized: false,
 	cookie: {
-		maxAge: 60000 // 1 minuto
+		maxAge: 600000 // 10 minutos
 	}
 }));
+app.use(passport.initialize());
+app.use(passport.session());
+passport.serializeUser((user: any, done) => {
+	done(null, user._id);
+});
 
+passport.deserializeUser((id, done) => {
+	const usuario = User.findById(id);
+	done(null, usuario);
+});
 
 
 /**
  * * Rutas
  */
+
 app.use(Express.static(path.join(__dirname, "../public")));
 app.use("/productos", routerProductos);
 app.use("/carrito", routerCarrito);
 app.use("/mockdata", routerMockData);
-app.use("/user", routerUser)
+// app.use("/user", routerUser)
+app.use("/login", login)
+app.use("/logout", logout)
+app.use("/signup", signUp)
 
-// Motor de plantillas
+
+
+//* Motor de plantillas
 // app.set("view engine", "pug");
 // app.set("views", path.resolve(__dirname, "../views"));
 app.engine(
@@ -74,26 +92,12 @@ app.set("views", "./views");
 app.set("view engine", "hbs");
 
 
-// Rutas
-app.get("/", auth, async (req, res: Response) => {
-	res.render("home");
+//* Rutas
+app.get("/", auth, async (_req, res: Response) => {
+	res.render("home", { logged: true });
 });
 
 
-// app.use(errorHandlerMiddleware);
-
-
-
-
-// app.get("*", async (req, res, next) => {
-// 	const error = new BadErrorHandler({statusCode:400});
-// 	next(error);
-// });
-
-// app.use((error: any, req: any, res: any, next: NextFunction) => {
-// 	return res.status(500).json({ error: error.toString() });
-
-// });
 
 
 export default app;

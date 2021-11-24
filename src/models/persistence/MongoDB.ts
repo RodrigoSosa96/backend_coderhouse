@@ -11,7 +11,7 @@ export default class MongoDB extends Database {
     private _collection: any = {
         productos,
         carrito,
-        mensajes
+        mensajes,
     };
     constructor(url: any, options: any) {
         super();

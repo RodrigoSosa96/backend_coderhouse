@@ -1,11 +1,10 @@
-<div class="login-card">
+<div class="form-card">
     {{#if logged}}
         <h2>Bienvenido {{user}}</h2>
         <p>Esta es la {{contador}} vez que en este sitio</p>
         <a href="/logout">Logout</a>
     {{else}}
         <h2>Login</h2>
-        <p>User: Alex Password: 20605</p>
         <p class="wrong-pass d-none">Contraseña incorrecta</p>
         <form action="/user/login" method="get" id="login-form">
             <div>
@@ -17,8 +16,9 @@
                 <input type="password" name="password" id="password" />
             </div>
             <div>
-                <button>Login</button>
+                <button id="login-button">Login</button>
             </div>
         </form>
+        <button id="signup-redirect">Signup</button>
     {{/if}}
 </div>
