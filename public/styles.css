@@ -17,6 +17,12 @@
     --color-none: #000000;
     --font-code: 'Inconsolata', monospace;
     --font-text: 'Roboto Mono', monospace;
+    --font-size-small: 1.2rem;
+    --font-size-medium: 1.4rem;
+    --font-size-large: 1.6rem;
+    --font-size-xlarge: 2.0rem;
+    --font-padding-small: 0.2rem 0.5rem;
+    
 }
 /* reset css */
 *:where(:not(iframe, canvas, img, svg, video):not(svg *)) {
@@ -156,8 +162,14 @@ form {
     background-color: var(--color-base2);
 }
 /* wrong pass alert hide */
-.wrong-pass {
+.alert {
     background-color: var(--color-red);
+    padding: var(--font-padding-small);
+
+}
+.success {
+    background-color: var(--color-green);
+    padding: var(--font-padding-small);
 }
 .d-none {
     display: none;

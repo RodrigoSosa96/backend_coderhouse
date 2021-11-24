@@ -69,6 +69,7 @@ if (logoutButton) {
 }
 //Signup-form
 const signupForm = document.querySelector('#signup-form');
+const signupError = document.querySelector('#signup-error');
 if (signupForm) {
     signupForm.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -86,19 +87,43 @@ if (signupForm) {
             },
             body: JSON.stringify(data),
         })
-            .then((res) => res.json())
+            // .then((res) => res.json())
             .then((res) => {
-                console.log(res);
-                // if (!res.ok) {
-                //     console.log(res.message);
-                // } else {
-                //     // window.location.href = '/';
-                //     console.log('signup success');
-                // }
+                if (!res.ok) {
+                    res.json().then((data) => {
+                        signupError.classList.remove('d-none');
+                        console.log(data);
+                        signupError.innerHTML = data.message;
+                    });
+
+                }
+                else {
+                    signupError.classList.add('d-none');
+                    signupError.classList.remove('alert');
+                    signupError.classList.add('success');
+                    signupError.innerHTML = 'Signup successful';
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 10000 ); // 10 seconds
+                }
             })
             .catch((err) => {
-                console.log(JSON.parse(err));
+                console.log(err);
             });
     }
     );
+}
+
+
+// Boton pagina de error
+const backButton = document.querySelector('#back-button');
+if (backButton) {
+    backButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (document.referrer.length > 0) {
+            window.history.back();
+        } else {
+            window.location.href = '/';
+        }
+    });
 }

@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import session from "express-session";
 import MongoStore from "connect-mongo";
 import passport from "passport";
+import flash from "connect-flash";
 
 import auth from "./middlewares/auth.middleware";
 import routerCarrito from "./routes/carrito.routes";
@@ -51,6 +52,7 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(flash());
 passport.serializeUser((user: any, done) => {
 	done(null, user._id);
 });

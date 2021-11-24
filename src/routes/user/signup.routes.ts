@@ -5,7 +5,7 @@ import { Strategy as LocalStrategy } from "passport-local";
 import { signupFailed, signupGet, signupPost } from "../../controllers/user.controller";
 
 import User from "../../models/user/User";
-import { createHash } from "../../utils/checkPass";
+// import { createHash } from "../../utils/checkPass";
 
 
 const signUp = Router();
@@ -14,22 +14,21 @@ passport.use("signup", new LocalStrategy({
     passReqToCallback: true
 },
     async (req, username, password, done) => {
+        const newUser = new User({
+            username,
+            password,
+            email: req.body.email,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+        });
         try {
-            const user = await User.findOne({ username });
-            if (user){
-                console.log("Usuario ya existe");
-                return done(null, false, { message: "User already exists" });
-            } 
-            const newUser = new User({
-                username,
-                password: createHash(password),
-                email: req.body.email,
-                firstName: req.body.firstName,
-                lastName: req.body.lastName,
-            });
             await newUser.save();
             return done(null, newUser);
-        } catch (err) {
+        } catch (err:any) {
+            if(err.code === 11000) {
+                return done(null, false, { message: "Usuario o email ya existe" });
+            }
+            console.log(err);
             return done(err);
         }
     }
@@ -37,7 +36,7 @@ passport.use("signup", new LocalStrategy({
 
 signUp
     .get("/", signupGet)
-    .post("/", passport.authenticate("signup", { failureRedirect: "/signup/failed" }), signupPost)
+    .post("/", passport.authenticate("signup", { failureRedirect: "/signup/failed", failureFlash: true  }), signupPost)
     .get("/failed", signupFailed);
 
 
