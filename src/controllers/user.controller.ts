@@ -1,60 +1,47 @@
 import { NextFunction, Request, Response } from "express";
+import { Model } from "mongoose";
+import passport from 'passport';
+import { Strategy as FacebookStrategy } from 'passport-facebook'
+
+import config from '../configs/server.config';
+import User from "../models/user/User";
+
+passport.use(new FacebookStrategy({
+    clientID: config.facebook.clientID,
+    clientSecret: config.facebook.clientSecret,
+    callbackURL: config.facebook.callbackURL,
+    profileFields: ['id', 'displayName', 'email', 'name', 'picture.type(large)']
+},
+    async function (accessToken, refreshToken, profile, done) {
+        try {
+            const user = await User.findOne({ facebookId: profile.id }).exec();
+            if (user) return done(null, user);
+            const newUser = new User({
+                facebookId: profile.id,
+                email: profile._json.email,
+                picture: profile._json.picture.data.url,
+                firstName: profile._json.first_name,
+                lastName: profile._json.last_name,
+            });
+            await newUser.save();
+            return done(null, newUser);
+        } catch (err) {
+            done(err);
+        }
+    }
+));
 
 
-
-declare module 'express-session' {
-	export interface SessionData {
-		logged: boolean
-		contador: number
-		user: string
-		admin: boolean
-	}
+const failedLogin = async (req: Request, res: Response) => {
+    res.render("failed", { message: "Login failed" });
+}
+const datos = async (req: Request, res: Response) => {
+    if (req.isAuthenticated()) res.json(req.user);
+    else res.redirect("/");
+}
+const logout = async (req: Request, res: Response) => {
+    req.logout();
+    res.redirect("/");
 }
 
-export const loginGet = async (req: Request, res: Response) => {
-	if (req.isAuthenticated()) {
-		res.redirect('/')
-	} else {
-		res.render('login')
-	}
-}
-export const loginPost = async (req: Request, res: Response) => {
-	res.status(200).send('login post')
-	// res.send('login post')
-}
-export const loginFailed = async (req: Request, res: Response) => {
-
-	// res.render('failed', { message: req.flash("error")[0] })
-	res.status(401).send({ message: req.flash("error")[0] })
-}
-
-
-//signup
-export const signupGet = async (req: Request, res: Response) => {
-	if (req.isAuthenticated()) {
-		res.redirect('/')
-	} else {
-		res.render('signup')
-	}
-}
-
-export const signupPost = async (_req: Request, res: Response) => {
-	res.status(201).send('Usuario creado')
-}
-
-export const signupFailed = async (req: Request, res: Response) => {
-	const flash = await req.flash("error")
-	res.status(409).send({ message: flash[0] })
-}
-
-//*Logout
-
-export const logoutPost = async (req: Request, res: Response) => {
-	if (req.isAuthenticated()) {
-		req.logout();
-		res.status(200).json({ message: 'Logout success' })
-	} else {
-		// res.redirect('/login')
-		res.status(401).json({ message: 'Logout failed' })
-	}
-}
+export default { failedLogin, datos, logout };

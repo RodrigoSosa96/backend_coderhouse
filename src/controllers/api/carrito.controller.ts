@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import db from "../index"
+import db from "../../index"
 
 import { DateTime } from "luxon";
-import { Carrito } from "../models/ecommerce/Carrito";
+import { Carrito } from "../../models/ecommerce/Carrito";
 
 /**
  * ! Revisar todo el carrito

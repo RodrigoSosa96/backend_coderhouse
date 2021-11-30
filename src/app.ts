@@ -1,26 +1,25 @@
 import Express, { Application, NextFunction, Request, response, Response } from "express";
 import handlebars from "express-handlebars";
-import path from "path";
 import cookieParser from 'cookie-parser';
-import session from "express-session";
 import MongoStore from "connect-mongo";
-import passport from "passport";
+import session from "express-session";
 import flash from "connect-flash";
+import passport from "passport";
+import path from "path";
 
+//	*Import de Routers
+import routerCarrito from "./routes/api/carrito.routes";
+import routerProductos from "./routes/api/productos.routes";
+import routerMockData from "./routes/api/mockData.routes";
+import routerUsuarios from "./routes/user/user.router";
+
+//	*Varios
 import auth from "./middlewares/auth.middleware";
-import routerCarrito from "./routes/carrito.routes";
-import routerProductos from "./routes/productos.routes";
-import routerMockData from "./routes/mockData.routes";
-// import routerUser from "./routes/login.routes";
 import mongoConfig from "./configs/mongoDB";
-import login from "./routes/user/login.routes";
-import logout from "./routes/user/logout.routes";
-import signUp from "./routes/user/signup.routes";
 import User from "./models/user/User";
 
 
 const app: Application = Express();
-
 /**
  ** Middlewares
  */
@@ -57,9 +56,14 @@ passport.serializeUser((user: any, done) => {
 	done(null, user._id);
 });
 
-passport.deserializeUser((id, done) => {
-	const usuario = User.findById(id);
-	done(null, usuario);
+passport.deserializeUser(async (id, done) => {
+	try {
+		const user = await User.findById(id);
+		done(null, user);
+	}
+	catch (err) {
+		done(null, false);
+	}
 });
 
 
@@ -71,10 +75,7 @@ app.use(Express.static(path.join(__dirname, "../public")));
 app.use("/productos", routerProductos);
 app.use("/carrito", routerCarrito);
 app.use("/mockdata", routerMockData);
-// app.use("/user", routerUser)
-app.use("/login", login)
-app.use("/logout", logout)
-app.use("/signup", signUp)
+app.use("/user", routerUsuarios);
 
 
 
@@ -95,8 +96,10 @@ app.set("view engine", "hbs");
 
 
 //* Rutas
-app.get("/", auth, async (_req, res: Response) => {
-	res.render("home", { logged: true });
+app.get("/", auth, async (req: any, res: Response) => {
+	
+	const user = req.user.firstName + " " + req.user.lastName;
+	res.render("home", { logged: true, user});
 });
 
 

@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { mensajes, productos } from "../controllers/mockData.controller";
+import { mensajes, productos } from "../../controllers/api/mockData.controller";
 
 const routerMockData = Router();
 

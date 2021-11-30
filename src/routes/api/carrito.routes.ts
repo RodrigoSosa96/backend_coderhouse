@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { getCarrito, postCarrito, deleteCarrito } from "../controllers/carrito.controller";
+import { getCarrito, postCarrito, deleteCarrito } from "../../controllers/api/carrito.controller";
 
 const routerCarrito = Router()
 routerCarrito

@@ -5,7 +5,7 @@
 
 ## Informacion:
 * Las entregas se encuentran en sus respectivas branches.
-
+* Si se cambia de rama hacer un npm clean-install
 * Rutas :
 
         http://localhost:8080/

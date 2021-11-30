@@ -53,18 +53,7 @@ const logoutButton = document.querySelector('#logout-button');
 if (logoutButton) {
     logoutButton.addEventListener('click', (e) => {
         e.preventDefault();
-        fetch('/logout/', {
-            method: 'POST',
-        })
-            .then((res) => {
-                if(res.ok)  window.location.href = '/';
-                else console.log('logout failed');
-                // window.location.href = '/';
-                // window.location.reload();
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+        window.location.href = '/user/logout';
     });
 }
 //Signup-form
@@ -125,5 +114,13 @@ if (backButton) {
         } else {
             window.location.href = '/';
         }
+    });
+}
+
+const facebookButton = document.querySelector('#facebook-login');
+if (facebookButton) {
+    facebookButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.href = '/user/auth/facebook';
     });
 }

@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { v4 } from "uuid";
 
-import db from "../index"
-import { serverConfig } from "../configs";
-import { Producto } from "../models/ecommerce/Producto";
+import db from "../../index"
+import { serverConfig } from "../../configs";
+import { Producto } from "../../models/ecommerce/Producto";
 
 
 export const getProductos = async (
@@ -138,9 +138,9 @@ export const productosMain = async (
 	req: Request,
 	res: Response,
 ) => {
-	if (req.session.logged) {
+	if (req.isAuthenticated()) {
 		res.render("index", { producto: db.getAll("productos"), login: true });
-	} else if (!req.session.logged) {
+	} else {
 		res.render("index", { producto: db.getAll("productos"), login: false });
 	}
 }
