@@ -16,7 +16,7 @@ import routerUsuarios from "./routes/user/user.router";
 //	*Varios
 import auth from "./middlewares/auth.middleware";
 import mongoConfig from "./configs/mongoDB";
-import User from "./models/user/User";
+import User from "./models/user/user.model";
 
 
 const app: Application = Express();

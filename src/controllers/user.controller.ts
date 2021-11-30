@@ -4,7 +4,7 @@ import passport from 'passport';
 import { Strategy as FacebookStrategy } from 'passport-facebook'
 
 import config from '../configs/server.config';
-import User from "../models/user/User";
+import User from "../models/user/user.model";
 
 passport.use(new FacebookStrategy({
     clientID: config.facebook.clientID,

@@ -2,9 +2,9 @@ import { Router } from "express";
 import passport from "passport";
 
 import controller from "../../controllers/user.controller";
-const User = Router();
+const user = Router();
 
-User
+user
     .get("/auth/facebook", passport.authenticate("facebook", { scope: ["email"] }))
     .get("/auth/facebook/redirect", passport.authenticate("facebook", {failureRedirect: "/user/failedLogin"}), (req, res) => {
         res.redirect("/");
@@ -13,4 +13,4 @@ User
     .get("/failedLogin", controller.failedLogin)
     .get("/logout", controller.logout)
 
-export default User;
+export default user;
