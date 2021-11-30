@@ -1,6 +1,6 @@
 # Proyecto BACKEND para CoderHouse
 
-## Entrega 6
+## Entrega 26
 * Rutas de login en src/routes/user.routes.ts
 
 ## Informacion:
