@@ -1,6 +1,6 @@
 # Proyecto BACKEND para CoderHouse
 
-## Entrega 6
+## Entrega 27
 * Rutas de login en src/routes/user/user.routes.ts
 * Rutas del controller y passport en src/controllers/user.controller.ts
 * Modelo de usuario en src/models/user/user.model.ts
