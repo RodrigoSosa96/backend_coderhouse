@@ -6,6 +6,7 @@ import session from "express-session";
 import flash from "connect-flash";
 import passport from "passport";
 import path from "path";
+import { fork } from "child_process";
 
 //	*Import de Routers
 import routerCarrito from "./routes/api/carrito.routes";
@@ -15,7 +16,7 @@ import routerUsuarios from "./routes/user/user.router";
 
 //	*Varios
 import auth from "./middlewares/auth.middleware";
-import mongoConfig from "./configs/mongoDB";
+import mongoConfig from "./configs/mongoDB.config";
 import User from "./models/user/user.model";
 
 
@@ -97,12 +98,33 @@ app.set("view engine", "hbs");
 
 //* Rutas
 app.get("/", auth, async (req: any, res: Response) => {
-	
+
 	const user = req.user.firstName + " " + req.user.lastName;
-	res.render("home", { logged: true, user});
+	res.render("home", { logged: true, user });
 });
 
 
+app.get("/info", async (req: Request, res: Response) => {
+	res.json({
+		"Argumentos de entrada": process.argv,
+		"Nombre de la plataforma": process.platform,
+		"Versión de node.js": process.version,
+		"Uso de memoria": process.memoryUsage(),
+		"Path de ejecución": process.cwd(),
+		"Process id": process.pid,
+		"Carpeta corriente": "qué es?"
+	})
+})
 
-
+app.get("/randoms?", (req: Request, res: Response) => {
+	//query cant convert to number
+	const { cant } = req.query;
+	let cantNumber = Number(cant);
+	if (!cantNumber) cantNumber = 100000000;
+	const forked = fork(path.resolve(__dirname, "utils/randoms" + path.extname(__filename)));
+	forked.send(cantNumber);
+	forked.on("message", (message: any) => {
+		res.json(message);
+	})
+})
 export default app;
