@@ -6,7 +6,10 @@
   "scripts": {
     "build": "tsc -p ./ ",
     "build:watch": "tsc -p ./ --watch",
-    "start": "nodemon ./dist/index.js --ignore ./files/* --delay 1"
+    "start": "node ./dist/index.js",
+    "prod:pm2": "pm2 start 02-server.js --watch -- 8012",
+    "prod:pm2:stop": "pm2 stop all",
+    "prod:forever": "forever start -w ./dist/index.js "
   },
   "repository": {
     "type": "git",

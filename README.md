@@ -1,14 +1,17 @@
 # Proyecto BACKEND para CoderHouse
 
-## Entrega 28
-* Argumentos para el puerto se encuentran en:
+## Entrega 29
+* Argumentos para el modo fork o cluster
     ```
-    configs/server.config.ts
+    src/index.ts
     ```
-* Ruta /info y /random? en
+* Argumentos para el modo cluster
     ```
-    src/app.ts
+    "prod:pm2":         "pm2 start 02-server.js --watch -- 8012",
+    "prod:pm2:stop":    "pm2 stop all",
+    "prod:forever":     "forever start -w ./dist/index.js "
     ```
+
 ## Informacion:
 * Las entregas se encuentran en sus respectivas branches.
 * Si se cambia de rama hacer un npm clean-install
