@@ -28,9 +28,10 @@
     }
     ```
 
-* ### Rutas de random e información: [Link a linea en el codigo][1]
+* \[[`app.ts 106-129`][1]] - Rutas de random e información
 
-[1]: ./src/app.ts#L106
+[1]: ./src/app.ts#L106-L129
+
 
 ## Informacion :
 * Las entregas se encuentran en sus respectivas branches.
