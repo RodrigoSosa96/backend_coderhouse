@@ -15,10 +15,9 @@ const httpsOptions = {
 	key: serverConfig.key,
 	cert: serverConfig.cert
 }
-const PORT = serverConfig.PORT || 8080
+const PORT = serverConfig.PORT
 const db = new DBConnection(process.env.ACTIVE_PERSISTENCE as string);
-const CLUSTER_MODE = process.argv[5] || "FORK"
-if (CLUSTER_MODE === "CLUSTER" && cluster.isPrimary) {
+if (process.argv[3] === "CLUSTER" && cluster.isPrimary) {
 	const cpuCount = os.cpus().length;
 	console.log(`Cantidad de CPUs: ${cpuCount}`);
 	console.log(`Master PID ${process.pid} is running`);

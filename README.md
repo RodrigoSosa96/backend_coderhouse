@@ -1,23 +1,43 @@
 # Proyecto BACKEND para CoderHouse
 
-## Entrega 29
-* Argumentos para el modo fork o cluster
+## Entrega 30
+* ### Instancias PM2 :
+
+    ```bash
+    pm2 start ./src/index.ts --name="backend-01" --watch -- 8081
+    pm2 start ./src/index.ts --name="backend-02" --watch -- 8082 CLUSTER
     ```
-    src/index.ts
+* ### Configuración de nginx:
     ```
-* Argumentos para el modo cluster
-    ```
-    "prod:pm2":         "pm2 start 02-server.js --watch -- 8012",
-    "prod:pm2:stop":    "pm2 stop all",
-    "prod:forever":     "forever start -w ./dist/index.js "
+    upstream node_app {
+        server 127.0.0.1:8081;
+        server 127.0.0.1:8082 weight=4;
+    }
+
+    server {
+        listen       80;
+        server_name  nginx_node;
+
+        location /info/ {
+            proxy_pass http://node_app;
+        }
+
+        location /randoms/ {
+            proxy_pass http://node_app;
+        }
+    }
     ```
 
-## Informacion:
+* ### Rutas de random e información: [Link a linea en el codigo][1]
+
+[1]: ./src/app.ts#L106
+
+## Informacion :
 * Las entregas se encuentran en sus respectivas branches.
 * Si se cambia de rama hacer un npm clean-install
 * Rutas :
 
-        http://localhost:8080/
+        https://localhost:8080/
         
         http://localhost:8080/productos
         
@@ -25,5 +45,5 @@
 
     Agregar datos a las bases de datos:
 
-        http://localhost:8080/mockdata
+        https://localhost:8080/mockdata
 
