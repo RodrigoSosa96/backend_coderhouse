@@ -4,6 +4,8 @@ import { createServer } from "https";
 // import { createServer } from "http";
 import { Server } from "socket.io";
 import fs from "fs";
+import cluster from "cluster";
+import os from "os";
 
 import { serverConfig } from "./configs"
 import { ioSocket } from "./controllers/IoSocket.controller";
@@ -15,20 +17,30 @@ const httpsOptions = {
 }
 const PORT = serverConfig.PORT || 8080
 const db = new DBConnection(process.env.ACTIVE_PERSISTENCE as string);
+const CLUSTER_MODE = process.argv[5] || "FORK"
+if (CLUSTER_MODE === "CLUSTER" && cluster.isPrimary) {
+	const cpuCount = os.cpus().length;
+	console.log(`Cantidad de CPUs: ${cpuCount}`);
+	console.log(`Master PID ${process.pid} is running`);
 
-const httpsServer = createServer(httpsOptions, app);
+	for (let i = 0; i < cpuCount; i++) {
+		cluster.fork();
+	}
+	cluster.on("exit", (worker, code, signal) => {
+		console.log(`Worker ${worker.process.pid} died`);
+		cluster.fork();
+	});
+} else {
+	const httpsServer = createServer(httpsOptions, app);
 
-// TODO: socket.io
-const io = new Server(httpsServer);
+	httpsServer.listen(PORT, async (): Promise<any> => {
+		try {
+			console.log(`Servidor http escuchando en el puerto ${PORT}. `, `Process ID: ${process.pid}`);
+			await db.instance.initSchemas()
+		} catch (err: any) {
+			console.log(err.message)
+		}
+	});
+}
 
-httpsServer.listen(PORT, async (): Promise<any> => {
-	const DIR = `https://localhost:${PORT}`;
-	console.log(`Servidor corriendo en ${DIR}`);
-	db.instance.initSchemas()
-		.then((res: any) => console.log(res))
-		.catch((err) => console.log(err.message));
-});
-
-
-// io.on("connection", ioSocket)
 export default db.instance;
