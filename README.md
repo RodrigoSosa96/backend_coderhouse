@@ -1,11 +1,11 @@
 # Proyecto BACKEND para CoderHouse
 
 ## Entrega 31
-* \[[`logs/`][2]] El loger se hizo usando Winstor, el archivo de log de warnings y errors se guardan en la carpeta logs
-* \[[`index.ts 46-50`][1]] - Pruebas del Logger
+El loger se hizo usando Winstor, el archivo de log de warnings y errors se guardan en la carpeta logs.
+
+* \[[`index.ts 46-50`][1]] - Pruebas del Logger al iniciar el proyecto
 
 [1]: ./src/index.ts#L46-50
-[2]: ./logs/
 
 
 ## Informacion :
