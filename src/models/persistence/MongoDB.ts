@@ -4,6 +4,7 @@ import { Database, TableName } from "./_AbstractClass";
 import productos from './schemas/productos';
 import carrito from './schemas/carrito';
 import mensajes from './schemas/mensajes';
+import Logger from '../../utils/logger';
 
 export default class MongoDB extends Database {
     public url: any;
@@ -40,7 +41,7 @@ export default class MongoDB extends Database {
             let Collection = this._collection[collection];
             return Collection.create(item);
         } catch (error) {
-            console.log(error);
+            Logger.error(error);
         }
     }
     async updateItem(collection: TableName, id: string, item: any) {
@@ -48,7 +49,7 @@ export default class MongoDB extends Database {
             let Collection = this._collection[collection];
             return Collection.findByIdAndUpdate(id, item, { new: true });
         } catch (error) {
-            console.log(error);
+            Logger.error(error);
         }
     }
     async deleteItem(collection: TableName, id: string) {
@@ -56,7 +57,7 @@ export default class MongoDB extends Database {
             let Collection = this._collection[collection];
             return Collection.findByIdAndDelete(id);
         } catch (error) {
-            console.log(error);
+            Logger.error(error);
         }
     }
     private async _disconnect(): Promise<void> {

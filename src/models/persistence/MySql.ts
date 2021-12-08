@@ -1,4 +1,5 @@
 import { knex, Knex } from "knex";
+import Logger from "../../utils/logger";
 
 import { Database, TableName } from "./_AbstractClass";
 
@@ -58,7 +59,7 @@ export default class SQL extends Database {
             const product = await this._knex(table).insert(data);
             return product;
         } catch (error:any) {
-            console.log(error);
+            Logger.error(error);
             throw new Error(error.message);
         }
     }

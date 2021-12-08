@@ -1,36 +1,11 @@
 # Proyecto BACKEND para CoderHouse
 
-## Entrega 30
-* ### Instancias PM2 :
+## Entrega 31
+* \[[`logs/`][2]] El loger se hizo usando Winstor, el archivo de log de warnings y errors se guardan en la carpeta logs
+* \[[`index.ts 46-50`][1]] - Pruebas del Logger
 
-    ```bash
-    pm2 start ./src/index.ts --name="backend-01" --watch -- 8081
-    pm2 start ./src/index.ts --name="backend-02" --watch -- 8082 CLUSTER
-    ```
-* ### Configuración de nginx:
-    ```
-    upstream node_app {
-        server 127.0.0.1:8081;
-        server 127.0.0.1:8082 weight=4;
-    }
-
-    server {
-        listen       80;
-        server_name  nginx_node;
-
-        location /info/ {
-            proxy_pass http://node_app;
-        }
-
-        location /randoms/ {
-            proxy_pass http://node_app;
-        }
-    }
-    ```
-
-* \[[`app.ts 106-129`][1]] - Rutas de random e información
-
-[1]: ./src/app.ts#L106-L129
+[1]: ./src/index.ts#L46-50
+[2]: ./logs/
 
 
 ## Informacion :

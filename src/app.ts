@@ -7,6 +7,7 @@ import flash from "connect-flash";
 import passport from "passport";
 import path from "path";
 import { fork } from "child_process";
+import compression from "compression";
 
 //	*Import de Routers
 import routerCarrito from "./routes/api/carrito.routes";
@@ -24,6 +25,7 @@ const app: Application = Express();
 /**
  ** Middlewares
  */
+app.use(compression())
 app.use(Express.json());
 app.use(Express.urlencoded({ extended: true }));
 
