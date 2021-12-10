@@ -6,8 +6,7 @@
   "scripts": {
     "build": "tsc -p ./ ",
     "build:watch": "tsc -p ./ --watch",
-    "start": "nodemon ./dist/index.js --ignore ./files/* --delay 1",
-    "start:prod": "node ./dist/index.js"
+    "start": "nodemon ./dist/index.js --ignore ./files/* --delay 1"
   },
   "repository": {
     "type": "git",
@@ -21,6 +20,7 @@
   },
   "homepage": "https://github.com/RodrigoSosa96/backend_coderhouse#readme",
   "devDependencies": {
+    "@types/autocannon": "^4.1.1",
     "@types/bcrypt": "^5.0.0",
     "@types/compression": "^1.7.2",
     "@types/connect-flash": "^0.0.37",
@@ -46,6 +46,7 @@
     "webpack-node-externals": "^3.0.0"
   },
   "dependencies": {
+    "autocannon": "^7.5.0",
     "bcrypt": "^5.0.1",
     "chalk": "^4.1.2",
     "compression": "^1.7.4",

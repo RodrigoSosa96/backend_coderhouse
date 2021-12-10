@@ -106,7 +106,34 @@ app.get("/", auth, async (req: any, res: Response) => {
 });
 
 //* Rutas
-app.get("/info", async (req: Request, res: Response) => {
+app.get("/info", (req: Request, res: Response) => {
+	res.json({
+		"Argumentos de entrada": process.argv,
+		"Nombre de la plataforma": process.platform,
+		"Versión de node.js": process.version,
+		"Uso de memoria": process.memoryUsage(),
+		"Path de ejecución": process.cwd(),
+		"Process id": process.pid,
+		"Carpeta corriente": "qué es?"
+	})
+})
+app.get("/info-block", (req: Request, res: Response) => {
+	console.log({
+		"Argumentos de entrada": process.argv,
+		"Nombre de la plataforma": process.platform,
+		"Versión de node.js": process.version,
+		"Uso de memoria": process.memoryUsage(),
+		"Path de ejecución": process.cwd(),
+		"Process id": process.pid,
+		"Carpeta corriente": "qué es?"
+	})
+	console.log("Argumentos de entrada: " + process.argv)
+	console.log("Nombre de la plataforma: " + process.platform)
+	console.log("Versión de node.js: " + process.version)
+	console.log(process.memoryUsage())
+	console.log("Path de ejecución: " + process.cwd())
+	console.log("Process id: " + process.pid)
+	console.log("Carpeta corriente: " + "qué es?")
 	res.json({
 		"Argumentos de entrada": process.argv,
 		"Nombre de la plataforma": process.platform,

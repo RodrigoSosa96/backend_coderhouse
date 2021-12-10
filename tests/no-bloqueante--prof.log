@@ -1,0 +1,224 @@
+Statistical profiling result from NObloqueante--prof.log, (496 ticks, 0 unaccounted, 0 excluded).
+
+ [Shared libraries]:
+   ticks  total  nonlib   name
+    405   81.7%          C:\Windows\SYSTEM32\ntdll.dll
+     90   18.1%          C:\Program Files\nodejs\node.exe
+
+ [JavaScript]:
+   ticks  total  nonlib   name
+      1    0.2%  100.0%  LazyCompile: *resolve node:path:158:10
+
+ [C++]:
+   ticks  total  nonlib   name
+
+ [Summary]:
+   ticks  total  nonlib   name
+      1    0.2%  100.0%  JavaScript
+      0    0.0%    0.0%  C++
+      5    1.0%  500.0%  GC
+    495   99.8%          Shared libraries
+
+ [C++ entry points]:
+   ticks    cpp   total   name
+
+ [Bottom up (heavy) profile]:
+  Note: percentage shows a share of a particular caller in the total
+  amount of its parent calls.
+  Callers occupying less than 1.0% are not shown.
+
+   ticks parent  name
+    405   81.7%  C:\Windows\SYSTEM32\ntdll.dll
+
+     90   18.1%  C:\Program Files\nodejs\node.exe
+     71   78.9%    C:\Program Files\nodejs\node.exe
+     24   33.8%      LazyCompile: ~compileFunction node:vm:308:25
+     24  100.0%        LazyCompile: ~wrapSafe node:internal/modules/cjs/loader:1017:18
+     24  100.0%          LazyCompile: ~Module._compile node:internal/modules/cjs/loader:1055:37
+     24  100.0%            LazyCompile: ~Module._extensions..js node:internal/modules/cjs/loader:1110:37
+      7    9.9%      LazyCompile: ~realpathSync node:fs:2408:22
+      7  100.0%        LazyCompile: ~toRealPath node:internal/modules/cjs/loader:393:20
+      6   85.7%          LazyCompile: ~tryFile node:internal/modules/cjs/loader:384:17
+      4   66.7%            LazyCompile: ~tryExtensions node:internal/modules/cjs/loader:400:23
+      2   33.3%            LazyCompile: *Module._findPath node:internal/modules/cjs/loader:494:28
+      1   14.3%          LazyCompile: ~Module._findPath node:internal/modules/cjs/loader:494:28
+      1  100.0%            LazyCompile: ~Module._resolveFilename node:internal/modules/cjs/loader:848:35
+      5    7.0%      LazyCompile: ~stat node:internal/modules/cjs/loader:151:14
+      3   60.0%        LazyCompile: ~Module._findPath node:internal/modules/cjs/loader:494:28
+      3  100.0%          LazyCompile: ~Module._resolveFilename node:internal/modules/cjs/loader:848:35
+      3  100.0%            LazyCompile: ~Module._load node:internal/modules/cjs/loader:757:24
+      2   40.0%        LazyCompile: ~tryFile node:internal/modules/cjs/loader:384:17
+      2  100.0%          LazyCompile: ~tryExtensions node:internal/modules/cjs/loader:400:23
+      2  100.0%            LazyCompile: ~Module._findPath node:internal/modules/cjs/loader:494:28
+      3    4.2%      LazyCompile: ~readSync node:fs:684:18
+      3  100.0%        LazyCompile: ~tryReadSync node:fs:429:21
+      3  100.0%          LazyCompile: ~readFileSync node:fs:450:22
+      3  100.0%            LazyCompile: ~Module._extensions..js node:internal/modules/cjs/loader:1110:37
+      3    4.2%      LazyCompile: ~openSync node:fs:576:18
+      3  100.0%        LazyCompile: ~readFileSync node:fs:450:22
+      2   66.7%          LazyCompile: ~Module._extensions..js node:internal/modules/cjs/loader:1110:37
+      2  100.0%            LazyCompile: ~Module.load node:internal/modules/cjs/loader:969:33
+      1   33.3%          LazyCompile: ~Module._extensions..json node:internal/modules/cjs/loader:1158:39
+      1  100.0%            LazyCompile: ~Module.load node:internal/modules/cjs/loader:969:33
+      3    4.2%      LazyCompile: ~compileForInternalLoader node:internal/bootstrap/loaders:299:27
+      3  100.0%        LazyCompile: ~nativeModuleRequire node:internal/bootstrap/loaders:332:29
+      1   33.3%          Function: ~<anonymous> node:tty:1:1
+      1  100.0%            LazyCompile: ~compileForInternalLoader node:internal/bootstrap/loaders:299:27
+      1   33.3%          Function: ~<anonymous> node:internal/modules/esm/loader:1:1
+      1  100.0%            LazyCompile: ~compileForInternalLoader node:internal/bootstrap/loaders:299:27
+      1   33.3%          Function: ~<anonymous> node:internal/crypto/hkdf:1:1
+      1  100.0%            LazyCompile: ~compileForInternalLoader node:internal/bootstrap/loaders:299:27
+      3    4.2%      LazyCompile: ~Module._load node:internal/modules/cjs/loader:757:24
+      3  100.0%        LazyCompile: ~Module.require node:internal/modules/cjs/loader:997:36
+      3  100.0%          LazyCompile: ~require node:internal/modules/cjs/helpers:93:31
+      1   33.3%            Function: ~<anonymous> C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\mongoose\lib\error\index.js:1:1
+      1   33.3%            Function: ~<anonymous> C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\knex\lib\schema\compiler.js:1:1
+      1   33.3%            Function: ~<anonymous> C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\knex\lib\knex-builder\Knex.js:1:1
+      1    1.4%      LazyCompile: ~writevGeneric node:internal/stream_base_commons:126:23
+      1  100.0%        LazyCompile: ~Socket._writeGeneric node:net:754:42
+      1  100.0%          LazyCompile: ~Socket._writev node:net:786:36
+      1  100.0%            LazyCompile: ~doWrite node:internal/streams/writable:398:17
+      1    1.4%      LazyCompile: ~writeHead node:_http_server:270:19
+      1  100.0%        LazyCompile: ~writeHead C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\on-headers\index.js:28:29
+      1  100.0%          LazyCompile: ~_implicitHeader node:_http_server:265:68
+      1  100.0%            LazyCompile: ~end C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\compression\index.js:92:28
+      1    1.4%      LazyCompile: ~toRealPath node:internal/modules/cjs/loader:393:20
+      1  100.0%        LazyCompile: ~Module._findPath node:internal/modules/cjs/loader:494:28
+      1  100.0%          LazyCompile: ~resolveMainPath node:internal/modules/run_main:11:25
+      1  100.0%            LazyCompile: ~executeUserEntryPoint node:internal/modules/run_main:72:31
+      1    1.4%      LazyCompile: ~stringify C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\express\lib\response.js:1118:20
+      1  100.0%        LazyCompile: ~json C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\express\lib\response.js:239:25
+      1  100.0%          LazyCompile: ~<anonymous> C:\Users\rod20\Documents\Cursos\Backend\entregas\dist\app.js:49:39
+      1  100.0%            LazyCompile: ~step C:\Users\rod20\Documents\Cursos\Backend\entregas\dist\app.js:15:18
+      1    1.4%      LazyCompile: ~setWriteHeadHeaders C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\on-headers\index.js:105:30
+      1  100.0%        LazyCompile: ~writeHead C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\on-headers\index.js:28:29
+      1  100.0%          LazyCompile: ~_implicitHeader node:_http_server:265:68
+      1  100.0%            LazyCompile: ~end C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\compression\index.js:92:28
+      1    1.4%      LazyCompile: ~send C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\express\lib\response.js:107:25
+      1  100.0%        LazyCompile: ~json C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\express\lib\response.js:239:25
+      1  100.0%          LazyCompile: ~<anonymous> C:\Users\rod20\Documents\Cursos\Backend\entregas\dist\app.js:49:39
+      1  100.0%            LazyCompile: ~step C:\Users\rod20\Documents\Cursos\Backend\entregas\dist\app.js:15:18
+      1    1.4%      LazyCompile: ~resolveExports node:internal/modules/cjs/loader:472:24
+      1  100.0%        LazyCompile: ~Module._findPath node:internal/modules/cjs/loader:494:28
+      1  100.0%          LazyCompile: ~Module._resolveFilename node:internal/modules/cjs/loader:848:35
+      1  100.0%            LazyCompile: ~Module._load node:internal/modules/cjs/loader:757:24
+      1    1.4%      LazyCompile: ~prepareMainThreadExecution node:internal/bootstrap/pre_execution:22:36
+      1  100.0%        Function: ~<anonymous> node:internal/main/run_main_module:1:1
+      1    1.4%      LazyCompile: ~memoryUsage node:internal/process/per_thread:165:23
+      1  100.0%        LazyCompile: ~<anonymous> C:\Users\rod20\Documents\Cursos\Backend\entregas\dist\app.js:49:39
+      1  100.0%          LazyCompile: ~step C:\Users\rod20\Documents\Cursos\Backend\entregas\dist\app.js:15:18
+      1  100.0%            LazyCompile: ~<anonymous> C:\Users\rod20\Documents\Cursos\Backend\entregas\dist\app.js:14:40
+      1    1.4%      LazyCompile: ~markAsUntransferable node:internal/buffer:1048:30
+      1  100.0%        LazyCompile: ~createPool node:buffer:150:20
+      1  100.0%          LazyCompile: ~allocate node:buffer:397:18
+      1  100.0%            LazyCompile: ~allocUnsafe node:buffer:372:42
+      1    1.4%      LazyCompile: ~handle C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\express\lib\router\index.js:136:31
+      1  100.0%        LazyCompile: ~handle C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\express\lib\application.js:158:29
+      1  100.0%          LazyCompile: ~app C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\express\lib\express.js:38:21
+      1  100.0%            LazyCompile: ~emit node:events:343:44
+      1    1.4%      LazyCompile: ~getOptionValue node:internal/options:28:24
+      1  100.0%        LazyCompile: ~Module._compile node:internal/modules/cjs/loader:1055:37
+      1  100.0%          LazyCompile: ~Module._extensions..js node:internal/modules/cjs/loader:1110:37
+      1  100.0%            LazyCompile: ~Module.load node:internal/modules/cjs/loader:969:33
+      1    1.4%      LazyCompile: ~expressInit C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\express\lib\middleware\init.js:29:30
+      1  100.0%        LazyCompile: ~handle C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\express\lib\router\layer.js:86:49
+      1  100.0%          LazyCompile: ~trim_prefix C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\express\lib\router\index.js:288:23
+      1  100.0%            LazyCompile: ~<anonymous> C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\express\lib\router\index.js:275:64
+      1    1.4%      LazyCompile: ~baseGetTag C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\lodash\_baseGetTag.js:19:20
+      1  100.0%        Function: ~<anonymous> C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\lodash\_getTag.js:1:1
+      1  100.0%          LazyCompile: ~Module._compile node:internal/modules/cjs/loader:1055:37
+      1  100.0%            LazyCompile: ~Module._extensions..js node:internal/modules/cjs/loader:1110:37
+      1    1.4%      LazyCompile: ~_finish node:_http_outgoing:905:53
+      1  100.0%        LazyCompile: ~_finish node:_http_server:204:52
+      1  100.0%          LazyCompile: ~end node:_http_outgoing:830:45
+      1  100.0%            LazyCompile: ~end C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\compression\index.js:92:28
+      1    1.4%      LazyCompile: ~SchemaType.required C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\mongoose\lib\schematype.js:951:41
+      1  100.0%        LazyCompile: ~SchemaType C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\mongoose\lib\schematype.js:40:20
+      1  100.0%          LazyCompile: ~SchemaNumber C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\mongoose\lib\schema\number.js:25:22
+      1  100.0%            LazyCompile: ~Schema.interpretAsType C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\mongoose\lib\schema.js:908:44
+      1    1.4%      LazyCompile: ~Mime.define C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\send\node_modules\mime\mime.js:21:34
+      1  100.0%        Function: ~<anonymous> C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\send\node_modules\mime\mime.js:1:1
+      1  100.0%          LazyCompile: ~Module._compile node:internal/modules/cjs/loader:1055:37
+      1  100.0%            LazyCompile: ~Module._extensions..js node:internal/modules/cjs/loader:1110:37
+      1    1.4%      LazyCompile: *resolve node:path:158:10
+      1  100.0%        LazyCompile: *readPackageScope node:internal/modules/cjs/loader:321:26
+      1  100.0%          LazyCompile: ~Module._extensions..js node:internal/modules/cjs/loader:1110:37
+      1  100.0%            LazyCompile: ~Module.load node:internal/modules/cjs/loader:969:33
+      1    1.4%      LazyCompile: *readPackageScope node:internal/modules/cjs/loader:321:26
+      1  100.0%        LazyCompile: ~Module._extensions..js node:internal/modules/cjs/loader:1110:37
+      1  100.0%          LazyCompile: ~Module.load node:internal/modules/cjs/loader:969:33
+      1  100.0%            LazyCompile: ~Module._load node:internal/modules/cjs/loader:757:24
+      1    1.4%      Function: ~<anonymous> node:zlib:1:1
+      1  100.0%        LazyCompile: ~compileForInternalLoader node:internal/bootstrap/loaders:299:27
+      1  100.0%          LazyCompile: ~compileForPublicLoader node:internal/bootstrap/loaders:246:25
+      1  100.0%            LazyCompile: ~loadNativeModule node:internal/modules/cjs/helpers:36:26
+      1    1.4%      Function: ~<anonymous> node:_http_agent:1:1
+      1  100.0%        LazyCompile: ~compileForInternalLoader node:internal/bootstrap/loaders:299:27
+      1  100.0%          LazyCompile: ~nativeModuleRequire node:internal/bootstrap/loaders:332:29
+      1  100.0%            Function: ~<anonymous> node:http:1:1
+      1    1.4%      Function: ~<anonymous> C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\lodash\_Map.js:1:1
+      1  100.0%        LazyCompile: ~Module._compile node:internal/modules/cjs/loader:1055:37
+      1  100.0%          LazyCompile: ~Module._extensions..js node:internal/modules/cjs/loader:1110:37
+      1  100.0%            LazyCompile: ~Module.load node:internal/modules/cjs/loader:969:33
+      1    1.4%      Function: ~<anonymous> C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\colors\lib\colors.js:1:1
+      1  100.0%        LazyCompile: ~Module._compile node:internal/modules/cjs/loader:1055:37
+      1  100.0%          LazyCompile: ~Module._extensions..js node:internal/modules/cjs/loader:1110:37
+      1  100.0%            LazyCompile: ~Module.load node:internal/modules/cjs/loader:969:33
+      1    1.1%    LazyCompile: ~require node:internal/modules/cjs/helpers:93:31
+      1  100.0%      Function: ~<anonymous> C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\mongoose\lib\helpers\update\moveImmutableProperties.js:1:1
+      1  100.0%        LazyCompile: ~Module._compile node:internal/modules/cjs/loader:1055:37
+      1  100.0%          LazyCompile: ~Module._extensions..js node:internal/modules/cjs/loader:1110:37
+      1  100.0%            LazyCompile: ~Module.load node:internal/modules/cjs/loader:969:33
+      1    1.1%    LazyCompile: ~onwrite node:internal/streams/writable:425:17
+      1  100.0%      LazyCompile: ~afterWriteDispatched node:internal/stream_base_commons:159:30
+      1  100.0%        LazyCompile: ~writevGeneric node:internal/stream_base_commons:126:23
+      1  100.0%          LazyCompile: ~Socket._writeGeneric node:net:754:42
+      1  100.0%            LazyCompile: ~Socket._writev node:net:786:36
+      1    1.1%    LazyCompile: ~onParserExecuteCommon node:_http_server:689:31
+      1  100.0%      LazyCompile: ~onParserExecute node:_http_server:632:25
+      1    1.1%    LazyCompile: ~normalizeParseOptions C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\qs\lib\parse.js:189:59
+      1  100.0%      LazyCompile: ~module.exports C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\qs\lib\parse.js:222:27
+      1  100.0%        LazyCompile: ~parseExtendedQueryString C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\express\lib\utils.js:291:34
+      1  100.0%          LazyCompile: ~query C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\express\lib\middleware\query.js:39:24
+      1  100.0%            LazyCompile: *next C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\express\lib\router\index.js:176:16
+      1    1.1%    LazyCompile: ~nextTick node:internal/process/task_queues:104:18
+      1  100.0%      LazyCompile: ~onwrite node:internal/streams/writable:425:17
+      1  100.0%        LazyCompile: ~afterWriteDispatched node:internal/stream_base_commons:159:30
+      1  100.0%          LazyCompile: ~writevGeneric node:internal/stream_base_commons:126:23
+      1  100.0%            LazyCompile: ~Socket._writeGeneric node:net:754:42
+      1    1.1%    LazyCompile: ~isFileType node:fs:205:20
+      1  100.0%      LazyCompile: ~realpathSync node:fs:2408:22
+      1  100.0%        LazyCompile: ~toRealPath node:internal/modules/cjs/loader:393:20
+      1  100.0%          LazyCompile: ~tryFile node:internal/modules/cjs/loader:384:17
+      1  100.0%            LazyCompile: ~tryExtensions node:internal/modules/cjs/loader:400:23
+      1    1.1%    LazyCompile: ~header C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\express\lib\response.js:754:29
+      1  100.0%      LazyCompile: ~json C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\express\lib\response.js:239:25
+      1  100.0%        LazyCompile: ~<anonymous> C:\Users\rod20\Documents\Cursos\Backend\entregas\dist\app.js:49:39
+      1  100.0%          LazyCompile: ~step C:\Users\rod20\Documents\Cursos\Backend\entregas\dist\app.js:15:18
+      1  100.0%            LazyCompile: ~<anonymous> C:\Users\rod20\Documents\Cursos\Backend\entregas\dist\app.js:14:40
+      1    1.1%    LazyCompile: ~from node:buffer:295:28
+      1  100.0%      LazyCompile: ~send C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\express\lib\response.js:107:25
+      1  100.0%        LazyCompile: ~json C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\express\lib\response.js:239:25
+      1  100.0%          LazyCompile: ~<anonymous> C:\Users\rod20\Documents\Cursos\Backend\entregas\dist\app.js:49:39
+      1  100.0%            LazyCompile: ~step C:\Users\rod20\Documents\Cursos\Backend\entregas\dist\app.js:15:18
+      1    1.1%    LazyCompile: ~append C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\vary\index.js:38:17
+      1  100.0%      LazyCompile: ~vary C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\vary\index.js:133:15
+      1  100.0%        LazyCompile: ~onResponseHeaders C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\compression\index.js:140:47
+      1  100.0%          LazyCompile: ~writeHead C:\Users\rod20\Documents\Cursos\Backend\entregas\node_modules\on-headers\index.js:28:29
+      1  100.0%            LazyCompile: ~_implicitHeader node:_http_server:265:68
+      1    1.1%    LazyCompile: ~allocate node:buffer:397:18
+      1  100.0%      LazyCompile: ~allocUnsafe node:buffer:372:42
+      1  100.0%        LazyCompile: ~tryCreateBuffer node:fs:414:25
+      1  100.0%          LazyCompile: ~readFileSync node:fs:450:22
+      1  100.0%            LazyCompile: ~Module._extensions..js node:internal/modules/cjs/loader:1110:37
+      1    1.1%    LazyCompile: ~Module._nodeModulePaths node:internal/modules/cjs/loader:583:37
+      1  100.0%      LazyCompile: ~Module.load node:internal/modules/cjs/loader:969:33
+      1  100.0%        LazyCompile: ~Module._load node:internal/modules/cjs/loader:757:24
+      1  100.0%          LazyCompile: ~Module.require node:internal/modules/cjs/loader:997:36
+      1  100.0%            LazyCompile: ~require node:internal/modules/cjs/helpers:93:31
+      1    1.1%    LazyCompile: ~<anonymous> C:\Users\rod20\Documents\Cursos\Backend\entregas\dist\app.js:49:39
+      1  100.0%      LazyCompile: ~step C:\Users\rod20\Documents\Cursos\Backend\entregas\dist\app.js:15:18
+      1  100.0%        LazyCompile: ~<anonymous> C:\Users\rod20\Documents\Cursos\Backend\entregas\dist\app.js:14:40
+      1  100.0%          LazyCompile: ~<anonymous> C:\Users\rod20\Documents\Cursos\Backend\entregas\dist\app.js:4:46
+      1  100.0%            C:\Program Files\nodejs\node.exe
+
