@@ -118,16 +118,16 @@ app.get("/info", async (req: Request, res: Response) => {
 	})
 })
 
-app.get("/randoms?", (req: Request, res: Response) => {
-	//query cant convert to number
-	const { cant } = req.query;
-	let cantNumber = Number(cant);
-	if (!cantNumber) cantNumber = 100000000;
-	const forked = fork(path.resolve(__dirname, "utils/randoms" + path.extname(__filename)));
-	forked.send(cantNumber);
-	forked.on("message", (message: any) => {
-		res.json(message);
-	})
-})
+// app.get("/randoms?", (req: Request, res: Response) => {
+// 	//query cant convert to number
+// 	const { cant } = req.query;
+// 	let cantNumber = Number(cant);
+// 	if (!cantNumber) cantNumber = 100000000;
+// 	const forked = fork(path.resolve(__dirname, "utils/randoms" + path.extname(__filename)));
+// 	forked.send(cantNumber);
+// 	forked.on("message", (message: any) => {
+// 		res.json(message);
+// 	})
+// })
 
 export default app;

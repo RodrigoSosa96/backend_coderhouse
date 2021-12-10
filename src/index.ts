@@ -18,35 +18,24 @@ const httpsOptions = {
 }
 const PORT = serverConfig.PORT
 const db = new DBConnection(process.env.ACTIVE_PERSISTENCE as string);
-if (process.argv[3] === "CLUSTER" && cluster.isPrimary) {
-	const cpuCount = os.cpus().length;
-	Logger.info(`Cantidad de CPUs: ${cpuCount}`);
-	Logger.info(`Master PID ${process.pid} is running`);
 
-	for (let i = 0; i < cpuCount; i++) {
-		cluster.fork();
+
+
+const httpsServer = createServer(httpsOptions, app);
+
+httpsServer.listen(PORT, async (): Promise<any> => {
+	try {
+		Logger.info(`Servidor http escuchando en el puerto ${PORT}. Process ID: ${process.pid}`);
+		await db.instance.initSchemas()
+	} catch (err: any) {
+		Logger.error(err.message)
 	}
-	cluster.on("exit", (worker, code, signal) => {
-		Logger.error(`Worker ${worker.process.pid} died`);
-		cluster.fork();
-	});
-} else {
-	const httpsServer = createServer(httpsOptions, app);
-
-	httpsServer.listen(PORT, async (): Promise<any> => {
-		try {
-			Logger.info(`Servidor http escuchando en el puerto ${PORT}. `, `Process ID: ${process.pid}`);
-			await db.instance.initSchemas()
-		} catch (err: any) {
-			Logger.error(err.message)
-		}
-	});
-}
+});
 
 // Test loggers
-Logger.info("Información");
-Logger.debug("Debug");
-Logger.warn("Advertencia");
-Logger.error("Error");
+// Logger.info("Información");
+// Logger.debug("Debug");
+// Logger.warn("Advertencia");
+// Logger.error("Error");
 
 export default db.instance;
