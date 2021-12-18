@@ -1,14 +1,13 @@
 # Proyecto BACKEND para CoderHouse
 
 ## Entrega 28
-* Argumentos para el puerto se encuentran en:
-    ```
-    configs/server.config.ts
-    ```
-* Ruta /info y /random? en
-    ```
-    src/app.ts
-    ```
+* \[[`server.config.ts`][1]] Argumentos para el puerto se encuentran en `configs/server.config.ts`
+* \[[`app.ts`][2]] Ruta /info y /random? en `src/app.ts`
+
+[1]: ./src/configs/server.config.ts
+[2]: ./src/app.ts
+
+
 ## Informacion:
 * Las entregas se encuentran en sus respectivas branches.
 * Si se cambia de rama hacer un npm clean-install
