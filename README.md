@@ -70,13 +70,13 @@ El tiempo de respuesta de la ruta no bloqueante es menor que la ruta bloqueante.
 
 ###  0x Flamegraph
 Resultados de la ejecución de la aplicación:
-![Flamegraph 0x](./tests/flamegraph.png)
+![Flamegraph 0x](./tests/flamegraph.png)  
 El grafico muestra el tiempo de ejecucion de cada funcion. Mas ancho el grafico, mas lento se ejecuta la funcion.\
 El color `rojo` indica la ruta bloqueante con console.log, el color `verde` indica la ruta sin bloqueo.
 
 ### Chrome DevTools
 Resultados de la ejecución de la aplicación:
-![Chrome DevTools](./tests/chrome-profiler.png)
+![Chrome DevTools](./tests/chrome-profiler.png)  
 La imagen muestra los tiempor de respuesta de cada ruta.
 
 ### Resultados:
