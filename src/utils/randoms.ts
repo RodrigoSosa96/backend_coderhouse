@@ -15,4 +15,3 @@ process.on("message", (message:any) => {
     // @ts-expect-error
     process.send(obj)
 })
-//un objeto que contendrá como claves los números random generados junto a la cantidad de veces que salió cada uno.

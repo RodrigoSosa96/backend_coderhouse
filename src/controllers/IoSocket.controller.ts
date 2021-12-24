@@ -1,7 +1,10 @@
 import { Socket } from "socket.io";
+
 import db from "../index"
 import Logger from "../utils/logger";
 
+
+//! Actualizar socket.io
 
 export const ioSocket = async (socket: Socket) => {
     try {

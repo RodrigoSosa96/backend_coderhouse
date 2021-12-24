@@ -1,13 +1,12 @@
-import { metodo } from "./interface";
-
+type Method = "GET" | "POST" | "DELETE" | "PUT"
 export class BadErrorHandler extends Error {
 	data: object;
-	metodo: metodo | undefined;
+	metodo?: Method;
 	statusCode: number;
 	constructor(err: {
 		message?: string;
 		statusCode?: number;
-		metodo?: metodo;
+		metodo?: Method;
 	}) {
 		super(err.message);
 

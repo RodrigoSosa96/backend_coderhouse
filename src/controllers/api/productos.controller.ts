@@ -3,8 +3,7 @@ import { v4 } from "uuid";
 
 import db from "../../index"
 import { serverConfig } from "../../configs";
-import { Producto } from "../../models/ecommerce/Producto";
-
+import { Producto } from "../../models/ecommerce";
 
 export const getProductos = async (
 	req: Request,

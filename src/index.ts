@@ -1,11 +1,7 @@
-import "dotenv/config"
-import app from "./app"
+import "dotenv/config";
+import app from "./app";
 import { createServer } from "https";
-// import { createServer } from "http";
 // import { Server } from "socket.io";
-import fs from "fs";
-import cluster from "cluster";
-import os from "os";
 
 import { serverConfig } from "./configs"
 import { ioSocket } from "./controllers/IoSocket.controller";
@@ -23,7 +19,7 @@ const db = new DBConnection(process.env.ACTIVE_PERSISTENCE as string);
 
 const httpsServer = createServer(httpsOptions, app);
 
-httpsServer.listen(PORT, async (): Promise<any> => {
+httpsServer.listen(PORT, async () => {
 	try {
 		Logger.info(`Servidor http escuchando en el puerto ${PORT}. Process ID: ${process.pid}`);
 		await db.instance.initSchemas()
@@ -31,11 +27,5 @@ httpsServer.listen(PORT, async (): Promise<any> => {
 		Logger.error(err.message)
 	}
 });
-
-// Test loggers
-// Logger.info("Información");
-// Logger.debug("Debug");
-// Logger.warn("Advertencia");
-// Logger.error("Error");
 
 export default db.instance;

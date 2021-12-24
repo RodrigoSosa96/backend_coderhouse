@@ -1,4 +1,4 @@
-import Express, { Application, NextFunction, Request, response, Response } from "express";
+import Express, { Application, NextFunction, Request, Response } from "express";
 import handlebars from "express-handlebars";
 import cookieParser from 'cookie-parser';
 import MongoStore from "connect-mongo";
@@ -6,19 +6,16 @@ import session from "express-session";
 import flash from "connect-flash";
 import passport from "passport";
 import path from "path";
-import { fork } from "child_process";
 import compression from "compression";
 
 //	*Import de Routers
-import routerCarrito from "./routes/api/carrito.routes";
-import routerProductos from "./routes/api/productos.routes";
-import routerMockData from "./routes/api/mockData.routes";
+import { carrito, mockData, productos } from "./routes/api";
 import routerUsuarios from "./routes/user/user.router";
 
 //	*Varios
-import auth from "./middlewares/auth.middleware";
-import mongoConfig from "./configs/mongoDB.config";
-import User from "./models/user/user.model";
+import { auth } from "./middlewares";
+import { mongoDbConfigs } from "./configs";
+import userModel from "./models/user/user.model";
 
 
 const app: Application = Express();
@@ -28,22 +25,10 @@ const app: Application = Express();
 app.use(compression())
 app.use(Express.json());
 app.use(Express.urlencoded({ extended: true }));
-
-
-// app.use((req: Request, res: Response, next: NextFunction) => {
-// 	if (req.session?.contador ) {
-// 		// res.locals.logged = req.session.logged;
-// 		req.session.contador++;
-// 		next();
-// 	} else {
-// 		next();
-// 	}
-// });
-
 app.use(cookieParser());
 app.use(session({
 	store: new MongoStore({
-		mongoUrl: mongoConfig.atlasUrl
+		mongoUrl: mongoDbConfigs.atlasUrl
 	}),
 	secret: process.env.SECRET_KEY as string,
 	resave: false,
@@ -61,7 +46,7 @@ passport.serializeUser((user: any, done) => {
 
 passport.deserializeUser(async (id, done) => {
 	try {
-		const user = await User.findById(id);
+		const user = await userModel.findById(id);
 		done(null, user);
 	}
 	catch (err) {
@@ -71,20 +56,19 @@ passport.deserializeUser(async (id, done) => {
 
 
 /**
- * * Rutas
+ * * Routers
  */
 
 app.use(Express.static(path.join(__dirname, "../public")));
-app.use("/productos", routerProductos);
-app.use("/carrito", routerCarrito);
-app.use("/mockdata", routerMockData);
+app.use("/productos", productos);
+app.use("/carrito", carrito);
+app.use("/mockdata", mockData);
 app.use("/user", routerUsuarios);
 
 
 
 //* Motor de plantillas
-// app.set("view engine", "pug");
-// app.set("views", path.resolve(__dirname, "../views"));
+
 app.engine(
 	"hbs",
 	handlebars({
@@ -99,41 +83,21 @@ app.set("view engine", "hbs");
 
 
 //* Rutas
-app.get("/", auth, async (req: any, res: Response) => {
 
-	const user = req.user.firstName + " " + req.user.lastName;
-	res.render("home", { logged: true, user });
+declare global {
+	namespace Express {
+		interface User {
+			firstName?: string;
+			lastName?: string;
+		}
+	}
+}
+app.get("/", auth, async (req: Request, res: Response) => {
+	if (req.user) res.render("home", { logged: true, user: req.user.firstName + " " + req.user.lastName });
+	else res.render("home", { logged: true, user: "USER ERROR" });
 });
 
-//* Rutas
-app.get("/info", (req: Request, res: Response) => {
-	res.json({
-		"Argumentos de entrada": process.argv,
-		"Nombre de la plataforma": process.platform,
-		"Versión de node.js": process.version,
-		"Uso de memoria": process.memoryUsage(),
-		"Path de ejecución": process.cwd(),
-		"Process id": process.pid,
-		"Carpeta corriente": "qué es?"
-	})
-})
-app.get("/info-block", (req: Request, res: Response) => {
-	console.log({
-		"Argumentos de entrada": process.argv,
-		"Nombre de la plataforma": process.platform,
-		"Versión de node.js": process.version,
-		"Uso de memoria": process.memoryUsage(),
-		"Path de ejecución": process.cwd(),
-		"Process id": process.pid,
-		"Carpeta corriente": "qué es?"
-	})
-	console.log("Argumentos de entrada: " + process.argv)
-	console.log("Nombre de la plataforma: " + process.platform)
-	console.log("Versión de node.js: " + process.version)
-	console.log(process.memoryUsage())
-	console.log("Path de ejecución: " + process.cwd())
-	console.log("Process id: " + process.pid)
-	console.log("Carpeta corriente: " + "qué es?")
+app.get("/info", (_req, res: Response) => {
 	res.json({
 		"Argumentos de entrada": process.argv,
 		"Nombre de la plataforma": process.platform,
@@ -145,16 +109,9 @@ app.get("/info-block", (req: Request, res: Response) => {
 	})
 })
 
-// app.get("/randoms?", (req: Request, res: Response) => {
-// 	//query cant convert to number
-// 	const { cant } = req.query;
-// 	let cantNumber = Number(cant);
-// 	if (!cantNumber) cantNumber = 100000000;
-// 	const forked = fork(path.resolve(__dirname, "utils/randoms" + path.extname(__filename)));
-// 	forked.send(cantNumber);
-// 	forked.on("message", (message: any) => {
-// 		res.json(message);
-// 	})
-// })
+//* Error 404
+app.use(function (_req, res, next) {
+	res.status(404).send('Ruta no encontrada');
+});
 
 export default app;

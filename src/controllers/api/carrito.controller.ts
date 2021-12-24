@@ -1,8 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import db from "../../index"
 
-import { DateTime } from "luxon";
-import { Carrito } from "../../models/ecommerce/Carrito";
+import { Carrito } from "../../models/ecommerce";
 
 /**
  * ! Revisar todo el carrito
@@ -47,7 +46,7 @@ export const postCarrito = async (
 		let carrito = await db.getById("carrito", "0");
 		if(producto) {
 			carrito.productos.push(producto);
-			carrito.timestamp = DateTime.local().toISO();
+			carrito.timestamp = new Date().toISOString();
 			await db.updateItem("carrito", id_producto, carrito);
 			res.status(202).json(carrito);
 		} else {

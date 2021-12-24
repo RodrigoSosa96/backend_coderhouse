@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from "express";
-import { Model } from "mongoose";
 import passport from 'passport';
 import { Strategy as FacebookStrategy } from 'passport-facebook'
 
@@ -12,7 +11,7 @@ passport.use(new FacebookStrategy({
     callbackURL: config.facebook.callbackURL,
     profileFields: ['id', 'displayName', 'email', 'name', 'picture.type(large)']
 },
-    async function (accessToken, refreshToken, profile, done) {
+    async function (_accessToken, _refreshToken, profile, done) {
         try {
             const user = await User.findOne({ facebookId: profile.id }).exec();
             if (user) return done(null, user);
@@ -32,7 +31,7 @@ passport.use(new FacebookStrategy({
 ));
 
 
-const failedLogin = async (req: Request, res: Response) => {
+const failedLogin = async (_req: Request, res: Response) => {
     res.render("failed", { message: "Login failed" });
 }
 const datos = async (req: Request, res: Response) => {
