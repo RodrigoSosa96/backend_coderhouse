@@ -1,10 +1,14 @@
 import { Socket } from "socket.io";
-import db from "../index"
 
+import db from "../index"
+import Logger from "../utils/logger";
+
+
+//! Actualizar socket.io
 
 export const ioSocket = async (socket: Socket) => {
     try {
-        console.log("Cliente conectado!");
+        Logger.info("Cliente conectado!");
 
         //  Productos
         let prodList = await db.getAll("productos");
@@ -16,7 +20,7 @@ export const ioSocket = async (socket: Socket) => {
                 prodList.push(data); //? es recomendable?
                 socket.emit("catalogo", { productos: prodList })
             } catch (e) {
-                console.log('Error mandando mensaje: ', e);
+                Logger.error('Error mandando mensaje: ', e);
             }
         });
         
@@ -35,11 +39,11 @@ export const ioSocket = async (socket: Socket) => {
                 readChat.push(newMessage)
                 socket.emit("mensajes", { chat: readChat })
             } catch (e) {
-                console.log("Error mandando mensaje: " + e)
+                Logger.warn("Error mandando mensaje: " + e)
             }
         })
     } catch (e) {
-        console.log('Error en ioSocket: ', e);
+        Logger.warn('Error en ioSocket: ', e);
     }
 
 

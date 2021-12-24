@@ -1,0 +1,24 @@
+<div class="form-card">
+    {{#if logged}}
+        <h2>Bienvenido {{user}}</h2>
+        <p>Esta es la {{contador}} vez que en este sitio</p>
+        <a href="/logout">Logout</a>
+    {{else}}
+        <h2>Login</h2>
+        <p class="alert d-none">Contraseña incorrecta</p>
+        <form action="/user/login" method="get" id="login-form">
+            <div>
+                <label for="username">Username:</label>
+                <input type="text" name="username" id="username" />
+            </div>
+            <div>
+                <label for="password">Password:</label>
+                <input type="password" name="password" id="password" />
+            </div>
+            <div>
+                <button id="login-button">Login</button>
+            </div>
+        </form>
+        <button id="signup-redirect">Signup</button>
+    {{/if}}
+</div>

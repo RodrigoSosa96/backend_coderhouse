@@ -1,68 +1,80 @@
-import Express, { Application, NextFunction, Request, response, Response } from "express";
+import Express, { Application, NextFunction, Request, Response } from "express";
 import handlebars from "express-handlebars";
-import path from "path";
 import cookieParser from 'cookie-parser';
-import session from "express-session";
 import MongoStore from "connect-mongo";
+import session from "express-session";
+import flash from "connect-flash";
+import passport from "passport";
+import path from "path";
+import compression from "compression";
 
-import routerCarrito from "./routes/carrito.routes";
-import routerProductos from "./routes/productos.routes";
-import routerMockData from "./routes/mockData.routes";
+//	*Import de Routers
+import { carrito, mockData, productos } from "./routes/api";
+import routerUsuarios from "./routes/user/user.router";
 
+//	*Varios
+import { auth } from "./middlewares";
+import { mongoDbConfigs } from "./configs";
+import userModel from "./models/user/user.model";
 
 
 const app: Application = Express();
-// const io = new 
-
-//	Middlewares
+/**
+ ** Middlewares
+ */
+app.use(compression())
 app.use(Express.json());
 app.use(Express.urlencoded({ extended: true }));
-
-//Cookie session con mongo
 app.use(cookieParser());
 app.use(session({
 	store: new MongoStore({
-		mongoUrl: process.env.MONGO_ATLAS_URL,
-		// mongoOptions: {
-		// 	useNewUrlParser: true,
-		// 	useUnifiedTopology: true
-		// }
+		mongoUrl: mongoDbConfigs.atlasUrl
 	}),
 	secret: process.env.SECRET_KEY as string,
 	resave: false,
 	saveUninitialized: false,
 	cookie: {
-		maxAge: 3600000 // 	1 hora
+		maxAge: 600000 // 10 minutos
 	}
 }));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
+passport.serializeUser((user: any, done) => {
+	done(null, user._id);
+});
 
-
-
-const auth = (req: Request, res: Response, next: NextFunction) => {
-	if (req.session?.logged) return next() //req.session?.admin
-	else return res.render("index", { producto: {}, existe: false });
-
-}
+passport.deserializeUser(async (id, done) => {
+	try {
+		const user = await userModel.findById(id);
+		done(null, user);
+	}
+	catch (err) {
+		done(null, false);
+	}
+});
 
 
 /**
- * * Rutas
+ * * Routers
  */
+
 app.use(Express.static(path.join(__dirname, "../public")));
-app.use("/productos", routerProductos);
-app.use("/carrito", routerCarrito);
-app.use("/mockdata", routerMockData);
+app.use("/productos", productos);
+app.use("/carrito", carrito);
+app.use("/mockdata", mockData);
+app.use("/user", routerUsuarios);
 
 
-// Motor de plantillas
-// app.set("view engine", "pug");
-// app.set("views", path.resolve(__dirname, "../views"));
+
+//* Motor de plantillas
+
 app.engine(
 	"hbs",
 	handlebars({
 		extname: ".hbs",
 		defaultLayout: "index.hbs",
-		layoutsDir: path.resolve(__dirname, "../views"),
+		layoutsDir: path.resolve(__dirname, "../views/layouts"),
 		partialsDir: path.resolve(__dirname, "../views/partials"),
 	})
 );
@@ -70,73 +82,36 @@ app.set("views", "./views");
 app.set("view engine", "hbs");
 
 
-// Rutas
-app.get("/", auth, (req, res: Response) => {
-	res.redirect("/productos");
-});
+//* Rutas
 
-
-
-declare module 'express-session' {
-	export interface SessionData {
-		contador: number
-		userName: string
-		admin: boolean
-		logged: boolean
+declare global {
+	namespace Express {
+		interface User {
+			firstName?: string;
+			lastName?: string;
+		}
 	}
 }
+app.get("/", auth, async (req: Request, res: Response) => {
+	if (req.user) res.render("home", { logged: true, user: req.user.firstName + " " + req.user.lastName });
+	else res.render("home", { logged: true, user: "USER ERROR" });
+});
 
-// app.get("/con-session", (req, res) => {
-// 	if (req.session.contador) {
-// 		req.session.contador++
-// 		res.send(`Usted a visitado el sitio ${req.session.contador} veces`)
-// 	} else {
-// 		req.session.contador = 1
-// 		res.send("Bienvenido")
-// 	}
-// })
-
-
-app.get("/logout", (req, res) => {
-	req.session.destroy(err => {
-		if(!err) res.send("logout ok").redirect("/")
-		else res.send({status:"logout error", body: err}).redirect("/")
+app.get("/info", (_req, res: Response) => {
+	res.json({
+		"Argumentos de entrada": process.argv,
+		"Nombre de la plataforma": process.platform,
+		"Versión de node.js": process.version,
+		"Uso de memoria": process.memoryUsage(),
+		"Path de ejecución": process.cwd(),
+		"Process id": process.pid,
+		"Carpeta corriente": "qué es?"
 	})
 })
 
-app.get("/login", (req, res) => {
-	if (!req.query.username || !req.query.password) {
-		res.send("login failed").redirect("/")
-	} else if (req.query.username === "alex" && req.query.password === "password") {
-		req.session.userName = req.query.username
-		req.session.cookie.maxAge = 60000
-		req.session.logged = true
-		res.send("login success!").redirect("/")
-	} else {
-		res.send("something went wrong").redirect("/")
-	}
-	// res.render("index", { login: "true", userName: "test" })
+//* Error 404
+app.use(function (_req, res, next) {
+	res.status(404).send('Ruta no encontrada');
 });
-
-// app.get("/content", auth, (req, res) => {
-//     res.send('Puedes ver este contenido si estás logueado y sos un administrador');
-// })
-
-
-// app.use(errorHandlerMiddleware);
-
-
-
-
-// app.get("*", async (req, res, next) => {
-// 	const error = new BadErrorHandler({statusCode:400});
-// 	next(error);
-// });
-
-// app.use((error: any, req: any, res: any, next: NextFunction) => {
-// 	return res.status(500).json({ error: error.toString() });
-
-// });
-
 
 export default app;

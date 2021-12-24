@@ -1,5 +1,6 @@
 import { Database, TableName } from "./_AbstractClass";
-import admin, { ServiceAccount } from 'firebase-admin';
+import { initializeApp, cert , ServiceAccount } from 'firebase-admin/app';
+import { getFirestore } from 'firebase-admin/firestore';
 
 const {DATABASE_URL} = process.env;
 const serviceAccount  = {
@@ -16,17 +17,15 @@ const serviceAccount  = {
 	client_x509_cert_url: process.env.GOOGLE_APPLICATION_CREDENTIALS_client,
 } as ServiceAccount;
 export default class Firebase extends Database {
-    private _firestore  = admin.firestore;
+    private _firestore  = getFirestore;
     constructor() {
         super();
     }
     async initSchemas() {
-        const firebase = admin.initializeApp({
-            credential: admin.credential.cert(serviceAccount),
+        const firebase = initializeApp({
+            credential: cert(serviceAccount),
             databaseURL: DATABASE_URL,
         });
-        
-        // return `Conexión exitosa a ${firebase.options.credential.projectId}`;
         return `Conexión exitosa a ${firebase.options.databaseURL}`;
     }
     async getAll(collection: TableName) {

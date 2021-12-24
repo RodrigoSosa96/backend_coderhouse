@@ -1,91 +1,126 @@
-let socket = io();
-const form = document.querySelector("#form-productos");
+const loginButton = document.querySelector('#login-button');
 
-form.addEventListener("submit", (e) => {
-	e.preventDefault();
-	let mensaje = {
-		title: document.getElementById("title").value,
-		price: document.getElementById("price").value,
-		thumbnail: document.getElementById("thumbnail").value,
-	};
-	socket.emit("nuevo-producto", mensaje);
-});
+// Login form
+const loginForm = document.querySelector('#login-form');
+// const loginButton = document.querySelector('#login-button');
 
-socket.on("catalogo", (data) => {
-	render(data);
-});
+const messageError = document.querySelector('.wrong-pass');
+if (loginForm) {
+    loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const username = loginForm.username.value;
+        const password = loginForm.password.value;
+        const data = {
+            username,
+            password,
+        };
+        fetch('/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+            // .then((res) => res.json())
+            .then((res) => {
+                if (!res.ok) {
+                    messageError.classList.remove('d-none');
+                    console.log(res.message);
 
-let render = (data) => {
-	console.log(data.productos.length);
-	if (data.productos.length > 0) {
-		let html = data.productos
-			.map(
-				(e) => `
-        <tr>
-            <th scope="row">${e.id ?? 0} </th>
-            <td class="w-25">
-                <img
-                    src=${e.thumbnail}
-                    class="img-fluid img-thumbnail"
-                    alt="${e.title}"
-                />
-            </td>
-            <td>${e.title}</td>
-            <td>${e.price}</td>
-        </tr>`
-			)
-			.join(" ");
-		document.getElementById("catalogoProductos").innerHTML = html;
-	} else {
-		console.log("Error al cargar archivos");
-	}
-};
+                } else {
+                    messageError.classList.add('d-none');
 
-socket.on("mensajes", (data) => {
-	renderMensajes(data);
-});
-
-const schemaAuthor = new normalizr.schema.Entity('author', {}, { idAttribute: 'email' });
-const schemaMessage = new normalizr.schema.Entity('message', { author: schemaAuthor }, { idAttribute: '_id' });
-const schemaChat = new normalizr.schema.Array(schemaMessage);
-const renderMensajes = (data) => {
-	const denormalizedData = normalizr.denormalize(data.chat.result, schemaChat, data.entities);
-
-	let html = denormalizedData
-		.map(
-			(e) => `
-            <p><strong>${e.author.email}</strong><em>[${e.author.nombre} ${e.author.apellido}. ${e.author.edad} años: Alias ${e.author.alias}] : </em> ${e.mensaje} </p>
-        `
-		)
-		.join("\n");
-	document.getElementById("chat").innerHTML = html;
-};
-var mensaje = {
-	author: {
-		email: 'mail del usuario',
-		nombre: 'nombre del usuario',
-		apellido: 'apellido del usuario',
-		edad: 'edad del usuario',
-		alias: 'alias del usuario',
-		avatar: 'url avatar (foto, logo) del usuario'
-	},
-	text: 'mensaje del usuario'
+                    window.location.href = res.url
+                }
+            })
+            .catch((err) => {
+                err = JSON.parse(err);
+                console.log(err);
+            });
+    });
 }
-const chatForm = document.getElementById("chatForm");
-chatForm.addEventListener("submit", (e) => {
-	e.preventDefault();
-	let chat = {
-		author: {
-			email: document.getElementById("email").value,
-			nombre: document.getElementById("nombre").value,
-			apellido: document.getElementById("apellido").value,
-			edad: document.getElementById("edad").value,
-			alias: document.getElementById("alias").value,
-			avatar: document.getElementById("avatar").value
-		},
-		mensaje: document.getElementById("mensaje").value,
-	};
-	socket.emit("nuevo-mensaje", chat);
-});
+const signupButton = document.querySelector('#signup-redirect');
+if (signupButton) {
+    signupButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.href = '/signup';
+    });
+}
 
 
+//Logout button
+const logoutButton = document.querySelector('#logout-button');
+if (logoutButton) {
+    logoutButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.href = '/user/logout';
+    });
+}
+//Signup-form
+const signupForm = document.querySelector('#signup-form');
+const signupError = document.querySelector('#signup-error');
+if (signupForm) {
+    signupForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const data = {
+            username: signupForm.username.value,
+            password: signupForm.password.value,
+            email: signupForm.email.value,
+            firstName: signupForm.name.value,
+            lastName: signupForm.lastname.value,
+        };
+        fetch('/signup', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+            // .then((res) => res.json())
+            .then((res) => {
+                if (!res.ok) {
+                    res.json().then((data) => {
+                        signupError.classList.remove('d-none');
+                        console.log(data);
+                        signupError.innerHTML = data.message;
+                    });
+
+                }
+                else {
+                    signupError.classList.add('d-none');
+                    signupError.classList.remove('alert');
+                    signupError.classList.add('success');
+                    signupError.innerHTML = 'Signup successful';
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 10000 ); // 10 seconds
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
+    );
+}
+
+
+// Boton pagina de error
+const backButton = document.querySelector('#back-button');
+if (backButton) {
+    backButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (document.referrer.length > 0) {
+            window.history.back();
+        } else {
+            window.location.href = '/';
+        }
+    });
+}
+
+const facebookButton = document.querySelector('#facebook-login');
+if (facebookButton) {
+    facebookButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.href = '/user/auth/facebook';
+    });
+}

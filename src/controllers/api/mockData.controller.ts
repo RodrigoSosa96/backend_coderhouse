@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import db from "../index"
+import db from "../../index"
 
-import { mockMensajes, mockProductos } from "../utils/mockData";
+import { mockMensajes, mockProductos } from "../../utils/mockData";
 
 
 
