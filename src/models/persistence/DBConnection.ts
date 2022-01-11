@@ -21,12 +21,9 @@ export default class DBConnection{
                 this.instance = new MySql(sqliteOptions);
                 break;
             case 4:
-                this.instance = new MongoDB(mongoDbConfigs.localUrl, mongoDbConfigs.options);
+                this.instance = new MongoDB(mongoDbConfigs.url, mongoDbConfigs.options);
                 break;
             case 5:
-                this.instance = new MongoDB(mongoDbConfigs.atlasUrl, mongoDbConfigs.options);
-                break;
-            case 6:
                 this.instance = new Firebase();
                 break;
             

@@ -5,6 +5,26 @@ import db from "../../index"
 import { serverConfig } from "../../configs";
 import { Producto } from "../../models/ecommerce";
 
+
+/**
+ * * Ruta: /productos
+ */
+export const productosMain = async (
+	req: Request,
+	res: Response,
+) => {
+	try {
+		const productos = await db.getAll("productos");
+		if (req.isAuthenticated()) res.render("home", { producto: productos, login: true });
+		else res.render("home", { producto: productos, login: false });
+	} catch {
+		res.status(500).json({
+			message: "Error al obtener los productos"
+		})
+	}
+}
+
+
 export const getProductos = async (
 	req: Request,
 	res: Response,
@@ -18,7 +38,7 @@ export const getProductos = async (
 			if (datosProductos) res.status(202).json(datosProductos);
 			else res.status(404).json({ error: -1, message: "No se encontro el producto" });
 		} else {
-			const datosProductos = await db.getAll("productos") as Producto
+			const datosProductos = await db.getAll("productos")
 			res.status(202).json(datosProductos);
 		}
 	} catch {
@@ -38,7 +58,7 @@ export const postProductos = async (
 ) => {
 	try {
 		let { body } = req;
-		if(!serverConfig.admin) throw new Error("No esta autorizado para realizar esta accion");  
+		if (!serverConfig.admin) throw new Error("No esta autorizado para realizar esta accion");
 		if (body.name && body.description && body.image && body.price && body.stock) {
 			const newProduct = new Producto(
 				body.name,
@@ -72,16 +92,14 @@ export const putProductos = async (
 ) => {
 	try {
 		let { body, params } = req;
-		if (serverConfig.admin === true) {
-			//! Revisar propiedades que no existen en el modelo
-			//! Revisar si vale la pena con mongo
+		if (serverConfig.admin) {
 			const data = {
 				...body
 			};
 			const updateProduct = await db.updateItem("productos", params.id, data);
 			if (updateProduct) res.status(202).json(updateProduct);
 			else res.status(404).json({ error: -1, message: "No se encontro el producto" });
-			
+
 			// let existeProducto = await db.getById("productos", params.id);
 			// if (existeProducto) {
 			// 	existeProducto = { ...existeProducto, ...updateProduct }
@@ -95,8 +113,8 @@ export const putProductos = async (
 				error: "No tienes permisos para actualizar productos",
 			});
 		}
-	} catch(err) {
-		next(err);
+	} catch {
+		next();
 	}
 };
 
@@ -126,21 +144,4 @@ export const deleteProductos = async (
 	} catch {
 		next();
 	}
-
-
 };
-
-/**
- * * Ruta: /productos
- */
-export const productosMain = async (
-	req: Request,
-	res: Response,
-) => {
-	if (req.isAuthenticated()) {
-		res.render("index", { producto: db.getAll("productos"), login: true });
-	} else {
-		res.render("index", { producto: db.getAll("productos"), login: false });
-	}
-}
-

@@ -17,7 +17,15 @@ import { auth } from "./middlewares";
 import { mongoDbConfigs } from "./configs";
 import userModel from "./models/user/user.model";
 
-
+declare global {
+	namespace Express {
+		interface User {
+			_id?: string;
+			firstName?: string;
+			lastName?: string;
+		}
+	}
+}
 const app: Application = Express();
 /**
  ** Middlewares
@@ -28,9 +36,9 @@ app.use(Express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(session({
 	store: new MongoStore({
-		mongoUrl: mongoDbConfigs.atlasUrl
+		mongoUrl: mongoDbConfigs.url
 	}),
-	secret: process.env.SECRET_KEY as string,
+	secret: process.env.SECRET_KEY!,
 	resave: false,
 	saveUninitialized: false,
 	cookie: {
@@ -40,11 +48,11 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
-passport.serializeUser((user: any, done) => {
+passport.serializeUser((user, done) => {
 	done(null, user._id);
 });
 
-passport.deserializeUser(async (id, done) => {
+passport.deserializeUser(async (id:string, done) => {
 	try {
 		const user = await userModel.findById(id);
 		done(null, user);
@@ -84,20 +92,12 @@ app.set("view engine", "hbs");
 
 //* Rutas
 
-declare global {
-	namespace Express {
-		interface User {
-			firstName?: string;
-			lastName?: string;
-		}
-	}
-}
-app.get("/", auth, async (req: Request, res: Response) => {
+app.get("/", async (req, res) => {
 	if (req.user) res.render("home", { logged: true, user: req.user.firstName + " " + req.user.lastName });
 	else res.render("home", { logged: true, user: "USER ERROR" });
 });
 
-app.get("/info", (_req, res: Response) => {
+app.get("/info", (_req, res) => {
 	res.json({
 		"Argumentos de entrada": process.argv,
 		"Nombre de la plataforma": process.platform,
@@ -110,7 +110,7 @@ app.get("/info", (_req, res: Response) => {
 })
 
 //* Error 404
-app.use(function (_req, res, next) {
+app.use(function (_req, res) {
 	res.status(404).send('Ruta no encontrada');
 });
 

@@ -1,8 +1,8 @@
-import { Schema, model  } from 'mongoose';
+import { Schema, model } from 'mongoose';
 
 
 interface Carrito {
-    timestamp: string;
+    timestamp: Date;
     nombre: string;
     descripcion: string;
     codigo: string;
@@ -11,14 +11,9 @@ interface Carrito {
     stock: number;
 }
 
-const Carrito = new Schema<Carrito>({
-    timestamp: { type: String, required: true },
-    nombre: { type: String, required: true },
-    descripcion: { type: String, required: true },
-    codigo: { type: String, required: true },
-    foto: { type: String, required: true },
-    precio: { type: Number, required: true },
-    stock: { type: Number, required: true }
+const Carrito = new Schema<any>({
+    timestamp: { type: Date, required: true },
+    productos: [{ type: Schema.Types.ObjectId, ref: 'Productos' }]
 }, { timestamps: true } //? testar
 );
 
