@@ -1,9 +1,10 @@
+import "dotenv/config";
+
 const config = {
-    localUrl:  process.env.MONGO_LOCAL_URL,
-    atlasUrl: process.env.MONGO_ATLAS_URL,
+    url:  process.env.MONGO_URL || "mongodb://localhost:27017/",
     options: {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
+        // useNewUrlParser: true,
+        // useUnifiedTopology: true,
     },
 };
 

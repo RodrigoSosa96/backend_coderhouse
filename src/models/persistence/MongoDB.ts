@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 
 import { Database, TableName } from "./_AbstractClass";
 import productos from './schemas/productos';
@@ -6,33 +6,39 @@ import carrito from './schemas/carrito';
 import mensajes from './schemas/mensajes';
 import Logger from '../../utils/logger';
 
+interface CollectionModel {
+    [key: string]: Model<any>
+}
+
 export default class MongoDB extends Database {
-    public url: any;
+    private _url: string;
     public options: any;
-    private _collection: any = {
-        productos,
-        carrito,
-        mensajes,
-    };
-    constructor(url: any, options: any) {
+    private _collection: CollectionModel = {};
+    constructor(url: string, options: any) {
         super();
-        this.url = url;
+        this._url = url;
         this.options = options;
 
     }
     async initSchemas() {
         try {
-            let db: any = await mongoose.connect(this.url, this.options);
-            return `MongoDB Schemas inicializados en ${db.connections[0].host}`;
+            let db: any = await mongoose.connect(this._url);
+            this._addCollection("productos", productos);
+            this._addCollection("carrito", carrito);
+            this._addCollection("mensajes", mensajes); 
+            return `MongoDB Schemas inicializados en ${db.connection.host + ":" + db.connection.port + "/" + db.connection.name}`;
         } catch (error) {
-            return error;
+            throw error;
         }
+    }
+    private async _addCollection(name: TableName, model: Model<any>) {
+        this._collection[name] = model;
     }
     async getAll(collection: TableName) {
         let Collection = this._collection[collection];
         return Collection.find();
     }
-    async getById(collection: TableName, id: string) {
+    async getById<T extends TableName, K extends keyof T> (collection: T, id: string) {
         let Collection = this._collection[collection];
         return Collection.findById(id);
     }

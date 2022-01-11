@@ -1,24 +1,22 @@
-import {randomBytes, scrypt, timingSafeEqual} from 'crypto'
-import {promisify} from 'util'
-import Logger from './logger';
+import { randomBytes, scrypt, timingSafeEqual } from 'crypto'
+import { promisify } from 'util'
 
 
 
-async function hash(password: string): Promise<string> {
+export async function hash(password: string): Promise<string> {
     try {
-        const salt = randomBytes(127800).toString("hex")
-        const derivedKey = await promisify(scrypt)(password, salt, 1024) as Buffer
+        const salt = randomBytes(16).toString("hex")
+        const derivedKey = await promisify(scrypt)(password, salt, 64) as Buffer
         return salt + ":" + derivedKey.toString('hex')
     }
     catch (err) {
         throw err
     }
 }
-async function verify(password: string, hash: string) {
+export async function verify(password: string, hash: string) {
     try {
         const [salt, key] = hash.split(":")
-        const derivedKey = await promisify(scrypt)(password, salt, 1024) as Buffer
-        // return derivedKey.toString("hex") === key
+        const derivedKey = await promisify(scrypt)(password, salt, 64) as Buffer
         return timingSafeEqual(derivedKey, Buffer.from(key, "hex"))
 
 
