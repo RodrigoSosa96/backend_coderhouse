@@ -3,6 +3,9 @@
 ## Entrega 32
 * \[[`app.ts 109-146`][1]] Rutas de información de la API bloqueante y no bloqueante
 
+
+[1]: ./src/app.ts#L109-146
+
 ###  Node.js profiler
 Resultados de la ejecución de la aplicación:
 * Ruta bloqueante:
@@ -26,8 +29,6 @@ Resultados de la ejecución de la aplicación:
 
 ```
 La ruta no bloquante presenta una menor cantidad de ticks que la ruta bloqueante.
-[1]: ./src/app.ts#L109-146
-
 
 ###  Artillery test
 Resultados de la ejecución de la aplicación:
