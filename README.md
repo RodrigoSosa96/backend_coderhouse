@@ -1,17 +1,25 @@
 # Proyecto BACKEND para CoderHouse
 
-* Las entregas se encuentran en sus respectivas branches.
+## Entrega 34
+Se hicieron los arreglos necesarios para el deploy en Heroku.
+* \[[`Link`][2]] Ruta de la aplicación en Heroku
 
+[2]: https://proyecto-backend-22885.herokuapp.com/
+
+
+## Informacion:
+* Las entregas se encuentran en sus respectivas branches.
+* Si se cambia de rama hacer un npm clean-install
 * Rutas :
 
-        http://localhost:8080/
+        https://proyecto-backend-22885.herokuapp.com/
         
-        http://localhost:8080/productos
+        https://proyecto-backend-22885.herokuapp.com/productos
         
-        http://localhost:8080/carrito
+        https://proyecto-backend-22885.herokuapp.com/carrito
 
     Agregar datos a las bases de datos:
 
-        http://localhost:8080/mockdata
+        https://proyecto-backend-22885.herokuapp.com/mockdata
 
     
