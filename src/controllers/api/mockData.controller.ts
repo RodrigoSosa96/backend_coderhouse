@@ -1,28 +1,27 @@
-import { NextFunction, Request, Response } from "express";
-import db from "../../index"
-
-import { mockMensajes, mockProductos } from "../../utils/mockData";
-
+import { Request, Response } from "express";
+import { ProductosModel, MensajesModel } from "../../models/schemas"
+import { mockProductos } from "../../utils/mockData";
 
 
 
 
-export const mensajes = async (_req: Request, res: Response, next: NextFunction) => {
-    try {
-        const data = mockMensajes()
-        await db.addItem("mensajes", data);
-        res.status(202).json("Datos agregados a base de datos");
-    } catch {
-        next();
-    }
+
+export const mensajes = async (_req: Request, res: Response) => {
+    // try {
+    //     const data = mockMensajes()
+    //     await MensajesModel.create(data);
+    //     res.status(202).json("Datos agregados a base de datos");
+    // } catch {
+    //     res.status(500).json("Error al agregar datos a base de datos");
+    // }
 }
 
-export const productos = async (_req: Request, res: Response, next: NextFunction) => {
+export const productos = async (_req: Request, res: Response) => {
     try {
         const data = mockProductos()
-        await db.addItem("productos", data);
+        await ProductosModel.create(data);
         res.status(201).json(data)
     } catch {
-        next();
+        res.status(500).json("Error al agregar datos a base de datos");
     }
 }

@@ -1,8 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import db from "../../index"
-
-import { Carrito } from "../../models/ecommerce";
-
+import { CarritoModel, ICarrito, ProductosModel } from "../../models/schemas";
 /**
  * ! Revisar todo el carrito
  * 
@@ -19,12 +16,14 @@ export const getCarrito = async (
 	try {
 		let { params } = req;
 		if (params.id) {
-			const carrito = await db.getById("productos", params.id);
+			const carrito = await CarritoModel.findById(params.id).exec()
 			res.status(202).json(carrito);
 		} else {
-			const carrito = await db.getAll("productos") as Carrito
-			if (carrito.productos.length > 0) res.status(202).json(carrito);
-			else res.status(404).json({ message: "No hay productos en el carrito" });
+			//TODO Check if user is logged in and if so, get the user's carrito
+			const carrito = await CarritoModel.find({
+				user: req.user._id
+			}).exec();
+			res.status(202).json(carrito);
 		}
 	} catch {
 		next();
@@ -44,7 +43,7 @@ export const postCarrito = async (
 		const { id_producto } = params;
 		const producto = await db.getById("productos", id_producto);
 		let carrito = await db.getById("carrito", "0");
-		if(producto) {
+		if (producto) {
 			carrito.productos.push(producto);
 			carrito.timestamp = new Date().toISOString();
 			await db.updateItem("carrito", id_producto, carrito);

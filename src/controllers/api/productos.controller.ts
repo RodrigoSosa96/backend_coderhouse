@@ -1,9 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { v4 } from "uuid";
 
-import db from "../../index"
+import { ProductosModel, IProductos } from "../../models/schemas";
 import { serverConfig } from "../../configs";
-import { Producto } from "../../models/ecommerce";
 
 
 /**
@@ -14,9 +13,9 @@ export const productosMain = async (
 	res: Response,
 ) => {
 	try {
-		const productos = await db.getAll("productos");
-		if (req.isAuthenticated()) res.render("home", { producto: productos, login: true });
-		else res.render("home", { producto: productos, login: false });
+		const productoss: IProductos[] = await ProductosModel.find().exec()
+		if (req.isAuthenticated()) res.render("home", { producto: productoss, login: true });
+		else res.render("home", { producto: ProductosModel, login: false });
 	} catch {
 		res.status(500).json({
 			message: "Error al obtener los productos"
@@ -25,24 +24,28 @@ export const productosMain = async (
 }
 
 
+
+/**
+ * * Ruta: /productos/listar/:id?
+ */
 export const getProductos = async (
 	req: Request,
 	res: Response,
-	next: NextFunction
 ) => {
-	///		/listar/:id?
 	try {
 		let { params } = req;
 		if (params.id) {
-			const datosProductos = await db.getById("productos", params.id);
+			const datosProductos = await ProductosModel.findById(params.id).exec()
 			if (datosProductos) res.status(202).json(datosProductos);
 			else res.status(404).json({ error: -1, message: "No se encontro el producto" });
 		} else {
-			const datosProductos = await db.getAll("productos")
+			const datosProductos = await ProductosModel.find().exec()
 			res.status(202).json(datosProductos);
 		}
 	} catch {
-		next();
+		res.status(500).json({
+			message: "Error al obtener los productos"
+		})
 	}
 };
 
@@ -60,15 +63,14 @@ export const postProductos = async (
 		let { body } = req;
 		if (!serverConfig.admin) throw new Error("No esta autorizado para realizar esta accion");
 		if (body.name && body.description && body.image && body.price && body.stock) {
-			const newProduct = new Producto(
-				body.name,
-				body.description,
-				body.code ?? v4(),
-				body.image,
-				body.price,
-				body.stock,
-			)
-			await db.addItem("productos", newProduct);
+			const newProduct: IProductos = await ProductosModel.create({
+				code: v4(),
+				name: body.name,
+				description: body.description,
+				image: body.image,
+				price: body.price,
+				stock: body.stock
+			});
 			res.status(201).json(newProduct);
 		} else {
 			res.status(401).json({
@@ -96,25 +98,18 @@ export const putProductos = async (
 			const data = {
 				...body
 			};
-			const updateProduct = await db.updateItem("productos", params.id, data);
+			const updateProduct = await ProductosModel.findByIdAndUpdate(params.id, data, { new: true }).exec();
 			if (updateProduct) res.status(202).json(updateProduct);
 			else res.status(404).json({ error: -1, message: "No se encontro el producto" });
-
-			// let existeProducto = await db.getById("productos", params.id);
-			// if (existeProducto) {
-			// 	existeProducto = { ...existeProducto, ...updateProduct }
-			// 	await db.updateItem("productos", params.id, existeProducto);
-			// 	res.status(202).json(existeProducto);
-			// } else {
-			// 	res.status(404).json({ error: -1, message: "No se encontro el producto" });
-			// }
 		} else {
 			res.status(401).json({
 				error: "No tienes permisos para actualizar productos",
 			});
 		}
 	} catch {
-		next();
+		res.status(500).json({
+			message: "Error al actualizar el producto"
+		})
 	}
 };
 
@@ -130,9 +125,9 @@ export const deleteProductos = async (
 	try {
 		let { params } = req;
 		if (serverConfig.admin) {
-			const existeProducto = await db.getById("productos", params.id);
+			const existeProducto = await ProductosModel.findById(params.id).exec();
 			if (!existeProducto) next();
-			await db.deleteItem("productos", params.id);
+			await ProductosModel.deleteOne({ _id: params.id }).exec();
 			res.status(202).json({
 				message: "Producto borrado",
 			});
@@ -142,6 +137,8 @@ export const deleteProductos = async (
 			});
 		}
 	} catch {
-		next();
+		res.status(500).json({
+			message: "Error al borrar el producto"
+		})
 	}
 };

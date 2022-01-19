@@ -1,4 +1,4 @@
-import Express, { Application, NextFunction, Request, Response } from "express";
+import Express, { Application } from "express";
 import handlebars from "express-handlebars";
 import cookieParser from 'cookie-parser';
 import MongoStore from "connect-mongo";
@@ -13,14 +13,16 @@ import { carrito, mockData, productos } from "./routes/api";
 import routerUsuarios from "./routes/user/user.router";
 
 //	*Varios
-import { auth } from "./middlewares";
+import { passport_load } from "./passport";
 import { mongoDbConfigs } from "./configs";
-import userModel from "./models/user/user.model";
+import { auth } from "./middlewares";
+import { Types } from "mongoose";
+import morganMiddleware from "./middlewares/morgan.middleware";
 
 declare global {
 	namespace Express {
 		interface User {
-			_id?: string;
+			_id?: Types.ObjectId;
 			firstName?: string;
 			lastName?: string;
 		}
@@ -36,7 +38,8 @@ app.use(Express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(session({
 	store: new MongoStore({
-		mongoUrl: mongoDbConfigs.url
+		mongoUrl: mongoDbConfigs.url,
+		collectionName: "sessions"
 	}),
 	secret: process.env.SECRET_KEY!,
 	resave: false,
@@ -45,22 +48,12 @@ app.use(session({
 		maxAge: 600000 // 10 minutos
 	}
 }));
+
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(morganMiddleware)
 app.use(flash());
-passport.serializeUser((user, done) => {
-	done(null, user._id);
-});
-
-passport.deserializeUser(async (id:string, done) => {
-	try {
-		const user = await userModel.findById(id);
-		done(null, user);
-	}
-	catch (err) {
-		done(null, false);
-	}
-});
+passport_load(passport);
 
 
 /**
@@ -71,7 +64,8 @@ app.use(Express.static(path.join(__dirname, "../public")));
 app.use("/productos", productos);
 app.use("/carrito", carrito);
 app.use("/mockdata", mockData);
-app.use("/user", routerUsuarios);
+app.use("/", routerUsuarios);
+
 
 
 
@@ -97,17 +91,9 @@ app.get("/", async (req, res) => {
 	else res.render("home", { logged: true, user: "USER ERROR" });
 });
 
-app.get("/info", (_req, res) => {
-	res.json({
-		"Argumentos de entrada": process.argv,
-		"Nombre de la plataforma": process.platform,
-		"Versión de node.js": process.version,
-		"Uso de memoria": process.memoryUsage(),
-		"Path de ejecución": process.cwd(),
-		"Process id": process.pid,
-		"Carpeta corriente": "qué es?"
-	})
-})
+
+
+
 
 //* Error 404
 app.use(function (_req, res) {

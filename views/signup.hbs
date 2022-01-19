@@ -3,26 +3,42 @@
     <h2>Registrarse</h2>
     <p id="signup-error" class="alert d-none"> </p>
     <form id="signup-form">
+        {{!-- email: string;
+        password: string;
+        name: string;
+        address: string;
+        age: number;
+        phoneNumber: string;
+        picture: string; --}}
         <div>
-            <label for="username">Username: </label>
-            <input type="text" name="username" required>
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" required>
         </div>
         <div>
-            <label for="password">Password: </label>
-            <input type="password" name="password" required>
+            <label for="password">Contraseña</label>
+            <input type="password" name="password" id="password" required>
         </div>
         <div>
-            <label for="email">Email: </label>
-            <input type="email" name="email" required>
+            <label for="name">Nombre</label>
+            <input type="text" name="name" id="name" required>
         </div>
         <div>
-            <label for="name">Nombre: </label>
-            <input type="text" name="name" required>
+            <label for="address">Dirección</label>
+            <input type="text" name="address" id="address" required>
         </div>
         <div>
-            <label for="lastname">Apellido: </label>
-            <input type="text" name="lastname" required>
+            <label for="age">Edad</label>
+            <input type="number" name="age" id="age" required>
         </div>
+        <div>
+            <label for="phoneNumber">Teléfono</label>
+            <input type="text" name="phoneNumber" id="phoneNumber" required>
+        </div>
+        <div>
+            <label for="picture">Foto de perfil</label>
+            <input type="text" name="picture" id="picture" required>
+        </div>
+
         <div>
             <button>Registrarse</button>
         </div>

@@ -1,11 +1,11 @@
 import { Schema, model, Document, Types, PopulatedDoc } from 'mongoose';
-import Producto from './productos';
+import {IProductos} from './productos';
 
 interface ventasDoc {
     saleDate: Date,
     items: [{
         item: String,
-        itemRef: typeof Producto,
+        itemRef: IProductos,
     }],
     costumer: [{
         user: String,
@@ -34,7 +34,7 @@ const ventas = new Schema<ventasDoc>({
 
 
 
-export default model<ventasDoc>('Ventas', ventas);
+export const VentasModel = model<ventasDoc>('Ventas', ventas);
 
 
 
