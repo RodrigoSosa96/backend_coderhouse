@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { ProductosModel, MensajesModel } from "../../models/schemas"
+import { ProductosModel, MensajesModel } from "../../models/_index"
 import { mockProductos } from "../../utils/mockData";
 
 
@@ -7,6 +7,7 @@ import { mockProductos } from "../../utils/mockData";
 
 
 export const mensajes = async (_req: Request, res: Response) => {
+    res.status(200).json({ ok: true, mensaje: "Mock mensajes no implementado" });
     // try {
     //     const data = mockMensajes()
     //     await MensajesModel.create(data);

@@ -1,27 +1,21 @@
 import { Router } from "express";
 import passport from "passport";
-import multer from "multer";
 
-import { loginGet, loginPost, loginFailed, logoutPost, signupFailed, signupGet, signupPost } from "../../controllers/user";
-import { postPicture } from "../../controllers/user/upload";
+import { loginGet, loginPost, loginFailed, logoutPost, signupFailed, signupGet, signupPost, datos } from "../../controllers/user/_index";
+import { upload } from "../../middlewares/multer.middleware";
 
-const upload = multer({ dest: "uploads/" });
 const user = Router();
 user
     //Signup:
     .get("/signup", signupGet)
-    .post("/signup", passport.authenticate("signup", { failureRedirect: "/signup/failed", failureFlash: true }), signupPost)
-    .get("/signup/failed", signupFailed)
+    .post("/signup", upload.single("picture"), passport.authenticate("signup", { failureRedirect: "/failed", failureFlash: true }), signupPost)
+    .get("/failed", signupFailed)
     //Login:
     .get("/login", loginGet)
-    .post("/login",(req, res, next) => {
-        console.log(req)
-        next()
-    }, passport.authenticate("login", { failureRedirect: "/login/failed", failureFlash: true }), loginPost)
+    .post("/login", passport.authenticate("login", { failureRedirect: "/login/failed", failureFlash: true }), loginPost)
     .get("/login/failed", loginFailed)
-    // .get("/datos", datos)//? Datos user
+    .get("/datos", datos)
     //Logout:
     .get("/logout", logoutPost)
-    .post("/profile/upload", upload.single("avatar"), postPicture )
 
 export default user;

@@ -4,7 +4,7 @@ import { createServer } from "http";
 import mongoose from "mongoose";
 // import { Server } from "socket.io";
 
-import { serverConfig, mongoDbConfigs } from "./configs"
+import { serverConfig, mongoDbConfigs } from "./configs/_index"
 // import { ioSocket } from "./controllers/IoSocket.controller";
 import Logger from "./utils/logger";
 
@@ -25,3 +25,19 @@ httpsServer.listen(PORT, async () => {
 		Logger.error(err)
 	}
 });
+
+const exitGracefully = () => {
+	Logger.debug('SIGTERM signal received.');
+	Logger.debug('Closing http server.');
+	httpsServer.close(() => {
+		Logger.debug('Http server closed.');
+		// boolean means [force], see in mongoose doc
+		mongoose.connection.close(false, () => {
+			Logger.debug('MongoDb connection closed.');
+			process.exit(0);
+		});
+	});
+}
+
+process.on('SIGTERM', exitGracefully);
+process.on('SIGINT', exitGracefully);

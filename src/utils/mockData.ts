@@ -1,11 +1,11 @@
 import faker from "faker"
-import { IProductos } from "../models/schemas"
+import { IProducto } from "../models/_index"
 faker.setLocale("es_MX")
 faker.seed(245665)
 
-export const mockProductos = (): IProductos[] => {
-    const productos: IProductos[] = []
-    for (let i = 0; i < 5; i++) {
+export const mockProductos = (num?: number): IProducto[] => {
+    const productos: IProducto[] = []
+    for (let i = 0; i < (num ?? 5); i++) {
         productos.push({
             name: faker.commerce.productName(),
             description: faker.commerce.productDescription(),
@@ -57,15 +57,15 @@ export const mockProductos = (): IProductos[] => {
 
 // const test = mockAuthors(3)
 
-// export const mockMensajes = (): any[] => {
-//     const mensajes: IMensajes[] = []
-//     for (let i = 0; i < 100; i++) {
-//         mensajes.push({
-//             message: faker.lorem.sentence(),
-//             //author is a red to an user
-//             author: faker.random.arrayElement(test)._id,
-//         })
-//     }
-//     return mensajes
-// }
+export const mockMensajes = (): any[] => {
+    // const mensajes: IMensajes[] = []
+    // for (let i = 0; i < 100; i++) {
+    //     mensajes.push({
+    //         message: faker.lorem.sentence(),
+    //         //author is a red to an user
+    //         author: faker.random.arrayElement(test)._id,
+    //     })
+    // }
+    return ["no implementado"]
+}
 

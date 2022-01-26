@@ -1,17 +1,23 @@
 import { Schema, model, Types, HydratedDocument, Model } from 'mongoose';
 import bcrypt from 'bcrypt';
-// email y password de usuario, además de su nombre, dirección, edad, número de teléfono (debe contener todos los prefijos internacionales) y foto ó avatar.
+import { CarritoModel, ICarrito } from './carrito';
+
 export interface IUser {
     email: string;
-    password: string;
+    password?: string;
     name: string;
     address: string;
     age: number;
     phoneNumber: string;
-    picture: string;
+    picture?: string;
+    carrito?: Types.ObjectId;
+}
+export interface PopulatedUser {
+    carritoID: ICarrito;
 }
 interface IUserMethod {
     comparePassword: (candidatePassword: string) => Promise<boolean>
+    createCarritoifNotExists: () => Promise<void>
 }
 
 const emailValidator = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/s;
@@ -24,14 +30,23 @@ const UserSchema = new Schema<IUser, Model<IUser, {}, IUserMethod>>({
     age: { type: Number, required: true },
     phoneNumber: { type: String, required: true },
     picture: { type: String, required: true },
-}, { collection: "Local-Users" });
+    carrito: { type: Types.ObjectId, ref: 'Carrito' }
+}, {
+    // // Testing this
+    // toObject: {
+    //     transform: function (doc, ret) {
+    //         delete ret.password;
+    //         delete ret.__v;
+    //     }
+    // }
+});
 
 UserSchema.pre('save', async function (this: HydratedDocument<IUser>, next) {
     const user = this;
     if (!user.isModified("password")) return next();
     try {
         const salt = await bcrypt.genSalt(10);
-        const hash = await bcrypt.hash(user.password, salt);
+        const hash = await bcrypt.hash(user.password!, salt);
         user.password = hash;
         next();
     } catch (err) {
@@ -40,8 +55,26 @@ UserSchema.pre('save', async function (this: HydratedDocument<IUser>, next) {
     }
 });
 
-UserSchema.methods.comparePassword = async function (candidatePassword: string): Promise<boolean> {
-    return await bcrypt.compare(candidatePassword, this.password)
+
+
+
+UserSchema.methods.comparePassword = async function (this: HydratedDocument<IUser>, candidatePassword: string): Promise<boolean> {
+    return await bcrypt.compare(candidatePassword, this.password!)
+}
+
+
+UserSchema.methods.createCarritoifNotExists = async function (this: HydratedDocument<IUser>): Promise<void> {
+    const user = this;
+    if (user.carrito) return;
+    try {
+        const carrito = await CarritoModel.create({ timestamp: new Date() });
+        user.carrito = carrito._id;
+        await user.save();
+    } catch (err) {
+        if (err instanceof Error) throw err;
+        else throw new Error("Error al crear el carrito");
+    }
 }
 
 export const UserModel = model<IUser, Model<IUser, {}, IUserMethod>>('User', UserSchema);
+

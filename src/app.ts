@@ -1,64 +1,37 @@
 import Express, { Application } from "express";
 import handlebars from "express-handlebars";
-import cookieParser from 'cookie-parser';
-import MongoStore from "connect-mongo";
-import session from "express-session";
-import flash from "connect-flash";
 import passport from "passport";
 import path from "path";
-import compression from "compression";
 
 //	*Import de Routers
-import { carrito, mockData, productos } from "./routes/api";
+import { carrito, mockData, productos } from "./routes/api/_index";
 import routerUsuarios from "./routes/user/user.router";
 
 //	*Varios
+import { middlewares } from "./middlewares/_init.middlewares";
 import { passport_load } from "./passport";
-import { mongoDbConfigs } from "./configs";
-import { auth } from "./middlewares";
+import { upload } from "./middlewares/multer.middleware";
 import { Types } from "mongoose";
-import morganMiddleware from "./middlewares/morgan.middleware";
 
 declare global {
 	namespace Express {
 		interface User {
 			_id?: Types.ObjectId;
-			firstName?: string;
-			lastName?: string;
+			email?: string;
+			name?: string;
+			carrito?: any;
 		}
 	}
 }
 const app: Application = Express();
-/**
- ** Middlewares
- */
-app.use(compression())
-app.use(Express.json());
-app.use(Express.urlencoded({ extended: true }));
-app.use(cookieParser());
-app.use(session({
-	store: new MongoStore({
-		mongoUrl: mongoDbConfigs.url,
-		collectionName: "sessions"
-	}),
-	secret: process.env.SECRET_KEY!,
-	resave: false,
-	saveUninitialized: false,
-	cookie: {
-		maxAge: 600000 // 10 minutos
-	}
-}));
 
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(morganMiddleware)
-app.use(flash());
+//*	Middlewares
+
+app.use(middlewares)
 passport_load(passport);
 
 
-/**
- * * Routers
- */
+// * Rutas
 
 app.use(Express.static(path.join(__dirname, "../public")));
 app.use("/productos", productos);
@@ -87,11 +60,15 @@ app.set("view engine", "hbs");
 //* Rutas
 
 app.get("/", async (req, res) => {
-	if (req.user) res.render("home", { logged: true, user: req.user.firstName + " " + req.user.lastName });
+	if (req.user) res.render("home", { logged: true, user: req.user.name});
 	else res.render("home", { logged: true, user: "USER ERROR" });
 });
 
-
+app.get("/test",upload.single("picture"), (req, res, next) => {
+	console.log("test");
+	console.log(req.body);
+	res.send("test");
+})
 
 
 

@@ -1,52 +1,51 @@
 import mongoose from "mongoose";
 import { PassportStatic } from "passport";
 import { Strategy } from "passport-local";
-import { UserModel } from "../models/schemas";
+import { IUser, UserModel } from "../models/_index";
+import Logger from "../utils/logger";
 
 export function passport_load(passport: PassportStatic) {
     passport.use("signup", new Strategy({ passReqToCallback: true, usernameField: "email" },
         async (req, email, password, done) => {
             try {
-                const user = await UserModel.findOne({ email }).exec();
-                if (user) {
-                    return done(null, false, { message: "Usuario ya existe" });
-                }
-                const newUser = new UserModel({
+                const body = req.body as IUser
+                const newUser = await UserModel.create<IUser>({
                     email,
                     password,
-                    name: req.body.name,
-                    firstName: req.body.firstName,
-                    lastName: req.body.lastName,
-                    address: req.body.address,
-                    age: req.body.age,
-                    phoneNumber: req.body.phoneNumber,
-                    picture: req.body.picture,
+                    name: body.name,
+                    address: body.address,
+                    age: body.age,
+                    phoneNumber: body.phoneNumber,
+                    picture: req.file?.filename,
                 });
-                await newUser.save();
-                return done(null, newUser);
+                return done(null, newUser.toObject());
             } catch (err) {
-                if (err instanceof mongoose.Error.ValidationError) {
+                // @ts-ignore
+                if (err.code === 11000) {
+                    return done(null, false, { message: "Usuario ya existe" });
+                }
+                if (err instanceof mongoose.Error) {
                     return done(null, false, { message: "Error validando los datos" });
                 }
                 return done(err);
+
+
             }
         }
     ));
 
 
     passport.use("login", new Strategy({ passReqToCallback: true, usernameField: "email" },
-        async (req, email: string, password: string, done) => {
+        async (_req, email: string, password: string, done) => {
             try {
-                console.log("login");
                 const user = await UserModel.findOne({ email }).exec();
                 if (!user) {
                     return done(null, false, { message: "Usuario no existe" });
                 }
-                if (await user.comparePassword(password)) {
+                if (!await user.comparePassword(password)) {
                     return done(null, false, { message: "Contraseña incorrecta" });
                 }
-                console.log(user);
-                return done(null, user);
+                return done(null, user.toObject());
             }
             catch (err) {
                 done(err);
@@ -56,17 +55,15 @@ export function passport_load(passport: PassportStatic) {
 
 
     passport.serializeUser((user, done) => {
-        console.log("serializeUser: ", user);
         done(null, user._id);
     });
 
     passport.deserializeUser(async (id: string, done) => {
         try {
-            console.log("deserializeUser: ", id);
-            const user = await UserModel.findById(id);
+            const user = await UserModel.findById(id).lean().exec();
             done(null, user);
         }
-        catch (err) {
+        catch {
             done(null, false);
         }
     });

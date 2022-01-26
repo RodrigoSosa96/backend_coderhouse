@@ -1,11 +1,11 @@
 import { Schema, model, Document, Types, PopulatedDoc } from 'mongoose';
-import {IProductos} from './productos';
+import {IProducto} from './productos';
 
 interface ventasDoc {
     saleDate: Date,
     items: [{
         item: String,
-        itemRef: IProductos,
+        itemRef: IProducto,
     }],
     costumer: [{
         user: String,

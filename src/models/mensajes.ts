@@ -19,4 +19,4 @@ const MensajesSchema = new Schema<IMensajes>({
     message: { type: String, trim: true, lowercase: true, required: [true, "Message is required"] }
 });
 
-export const MensajesModel = model<IMensajes>('Mensajes', MensajesSchema);
+export const MensajesModel = model<IMensajes>('Mensaje', MensajesSchema);

@@ -3,7 +3,7 @@ import { getProductos, postProductos, putProductos, deleteProductos, productosMa
 
 
 const routerProductos = Router();
-
+//! Admin middleware
 routerProductos
 	.get("/", productosMain)// arreglar
 	.get("/listar/:id?", getProductos)
