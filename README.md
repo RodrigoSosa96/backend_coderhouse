@@ -1,8 +1,8 @@
 # Proyecto BACKEND para CoderHouse
 
-##  Entrega 38: Dividir en capas nuestro proyecto
+##  Entrega 42
+* \[[`src/index.test.ts`][1]] - Los test se encuentran en `src/index.test.ts`
+* \[[`axios-test/index.html`][2]] - El cliente HTTP se encuentra en  `axios-test/index.html`, los test solo se hacen por consola automaticamente
 
-* El proyecto está dividido en tres capas:
-    * Controladores: Contiene todas las funciones que manejan las peticiones del usuario.
-    * Modelos: Contiene todas las funciones que manejan la base de datos.
-    * Rutas de la API: Contiene todas las rutas de la API. 
+[1]: ./src/index.test.ts
+[2]: ./axios-test/index.html
