@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { v4 } from "uuid";
 
 import { ProductosModel, IProducto } from "../../models/_index";
-import { serverConfig } from "../../configs/_index";
+// import { serverConfig } from "../../configs/_index";
 import { isValidObjectId } from "mongoose";
 import Logger from "../../utils/logger";
 

@@ -13,6 +13,11 @@ import { passport_load } from "./passport";
 import { upload } from "./middlewares/multer.middleware";
 import { Types } from "mongoose";
 
+//	*GraphQL
+import { graphqlHTTP } from "express-graphql";
+import { rootSchema } from "./models/graphql";
+import { rootController } from "./controllers/graphql/graphql.controller";
+
 declare global {
 	namespace Express {
 		interface User {
@@ -23,7 +28,7 @@ declare global {
 		}
 	}
 }
-const app: Application = Express();
+const app: Application = Express()
 
 //*	Middlewares
 
@@ -38,6 +43,14 @@ app.use("/productos", productos);
 app.use("/carrito", carrito);
 app.use("/mockdata", mockData);
 app.use("/", routerUsuarios);
+
+// * GraphQL
+app.use("/graphql", graphqlHTTP({
+	schema: rootSchema,
+	rootValue: rootController,
+	graphiql: true,
+
+}))
 
 
 
@@ -60,11 +73,11 @@ app.set("view engine", "hbs");
 //* Rutas
 
 app.get("/", async (req, res) => {
-	if (req.user) res.render("home", { logged: true, user: req.user.name});
+	if (req.user) res.render("home", { logged: true, user: req.user.name });
 	else res.render("home", { logged: true, user: "USER ERROR" });
 });
 
-app.get("/test",upload.single("picture"), (req, res, next) => {
+app.get("/test", upload.single("picture"), (req, res, next) => {
 	console.log("test");
 	console.log(req.body);
 	res.send("test");
