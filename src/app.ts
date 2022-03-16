@@ -10,21 +10,15 @@ import routerUsuarios from "./routes/user/user.router";
 //	*Varios
 import { middlewares } from "./middlewares/_init.middlewares";
 import { passport_load } from "./passport";
-import { upload } from "./middlewares/multer.middleware";
+// import { upload } from "./middlewares/multer.middleware";
 import { Types } from "mongoose";
+import { IUser } from "./models/user";
 
-//	*GraphQL
-import { graphqlHTTP } from "express-graphql";
-import { rootSchema } from "./models/graphql";
-import { rootController } from "./controllers/graphql/graphql.controller";
 
 declare global {
 	namespace Express {
-		interface User {
+		interface User extends IUser {
 			_id?: Types.ObjectId;
-			email?: string;
-			name?: string;
-			carrito?: any;
 		}
 	}
 }
@@ -43,14 +37,6 @@ app.use("/productos", productos);
 app.use("/carrito", carrito);
 app.use("/mockdata", mockData);
 app.use("/", routerUsuarios);
-
-// * GraphQL
-app.use("/graphql", graphqlHTTP({
-	schema: rootSchema,
-	rootValue: rootController,
-	graphiql: true,
-
-}))
 
 
 
@@ -74,20 +60,15 @@ app.set("view engine", "hbs");
 
 app.get("/", async (req, res) => {
 	if (req.user) res.render("home", { logged: true, user: req.user.name });
-	else res.render("home", { logged: true, user: "USER ERROR" });
+	else res.render("home", { logged: false }); 
 });
-
-app.get("/test", upload.single("picture"), (req, res, next) => {
-	console.log("test");
-	console.log(req.body);
-	res.send("test");
-})
-
 
 
 //* Error 404
 app.use(function (_req, res) {
 	res.status(404).send('Ruta no encontrada');
+	// res.render('404');
+
 });
 
 export default app;

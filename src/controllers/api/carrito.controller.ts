@@ -3,7 +3,7 @@ import { Types } from "mongoose";
 import { CarritoModel, ICarrito, ProductosModel, UserModel } from "../../models/_index";
 /**
  * ! Revisar todo el carrito
- * 
+ * ! 1 solo carrito
  */
 
 
@@ -22,11 +22,11 @@ import { CarritoModel, ICarrito, ProductosModel, UserModel } from "../../models/
 //  res.end(); // important to update session
 
 export const getCarrito = async (req: Request, res: Response, next: NextFunction) => {
-	if (req.isUnauthenticated()) return res.json({ message: "No estas autenticado" });
+	if (req.isUnauthenticated() || !req.user) return res.json({ message: "No estas autenticado" });
 	try {
-		let user = await UserModel.findById(req.user?._id).exec();
-		user?.createCarritoifNotExists();
-		
+		console.log(req.user.carrito)
+		let user = await UserModel.findById(req.user._id).exec();
+		user?.createCarrito();
 
 		return res.json(user?.carrito);
 	} catch {
@@ -59,7 +59,27 @@ export const postCarrito = async (req: Request, res: Response, next: NextFunctio
 /**
  * * Ruta: carrito/borrar/:id
  */
+
+/**
+ exports.deleteImageById = function(req, res, next) {
+  const email = req.user.email;
+  const id = req.body.id;
+
+  Image.findOneAndRemove({ _id: id })
+   .exec(function(err, removed) {
+      User.findOneAndUpdate(
+        { email: email },
+        { $pull: { favorites: { _id: id } } },
+        { new: true },
+        function(err, removedFromUser) {
+          if (err) { console.error(err) }
+          res.status(200).send(removedFromUser)
+        })
+    })
+}
+ */
 export const deleteCarrito = async (req: Request, res: Response, next: NextFunction) => {
+	
 	// //	/borrar/:id
 	// let { params } = req;
 	// try {
