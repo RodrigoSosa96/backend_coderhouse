@@ -4,7 +4,7 @@ import { IUser } from './user';
 
 
 export interface IMensajes {
-    author: Types.ObjectId,
+    author: Types.ObjectId | IUser,
     name: string,
     message: string,
 }

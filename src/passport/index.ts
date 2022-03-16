@@ -24,7 +24,7 @@ export function passport_load(passport: PassportStatic) {
                 if (err.code === 11000) {
                     return done(null, false, { message: "Usuario ya existe" });
                 }
-                if (err instanceof mongoose.Error) {
+                if (err instanceof mongoose.Error.ValidationError) {
                     return done(null, false, { message: "Error validando los datos" });
                 }
                 return done(err);

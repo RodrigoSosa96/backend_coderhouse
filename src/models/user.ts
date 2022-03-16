@@ -17,7 +17,7 @@ export interface PopulatedUser {
 }
 interface IUserMethod {
     comparePassword: (candidatePassword: string) => Promise<boolean>
-    createCarritoifNotExists: () => Promise<void>
+    createCarrito: () => Promise<void>
 }
 
 const emailValidator = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/s;
@@ -63,8 +63,9 @@ UserSchema.methods.comparePassword = async function (this: HydratedDocument<IUse
 }
 
 
-UserSchema.methods.createCarritoifNotExists = async function (this: HydratedDocument<IUser>): Promise<void> {
+UserSchema.methods.createCarrito = async function (this: HydratedDocument<IUser>): Promise<void> {
     const user = this;
+    console.log("se quiere crear un carro")
     if (user.carrito) return;
     try {
         const carrito = await CarritoModel.create({ timestamp: new Date() });
