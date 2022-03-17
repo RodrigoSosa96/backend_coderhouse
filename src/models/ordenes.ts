@@ -1,4 +1,8 @@
-import { Schema, model, Types, Model } from 'mongoose';
+import { pre, prop, Ref, modelOptions, DocumentType, ReturnModelType } from "@typegoose/typegoose";
+import { Producto } from "./productos";
+import { User } from "./user";
+import { OrdenesModel } from "./models"
+
 
 
 /**
@@ -8,21 +12,46 @@ import { Schema, model, Types, Model } from 'mongoose';
 - estado ( por defecto en ‘generada’)
 - Email de quién realizó la orden
  */
-export interface IOrdenes {
-    items: [{producto: Types.ObjectId,cantidad: number}];
-    numero: number;
-    timestamp: Date;
-    estado: string;
-    email: string;
+@modelOptions({ schemaOptions: { _id: false } })
+class Items {
+    @prop({ required: true, ref: () => Producto })
+    public producto!: Ref<Producto>;
+
+    @prop({ required: true })
+    public cantidad!: number;
 }
 
-export interface IOrdenesMethod {
+
+
+// @pre<Ordenes>("save", async function (next) {
+//     if(this.isNew){
+//         this.numero = await this.countOrdenes()
+//         next();
+//     }else {
+//         next();
+//     }
+// })
+export class Ordenes {
+    @prop({ required: true, ref: () => User })
+    public user : Ref<User>;
+    
+    @prop({ required: true })
+    public fecha!: Date;
+    
+    @prop({ required: true, type: () => Items })
+    public items!: Items[];
+
+    @prop({ required: true })
+    public address!: string;    
+
+    @prop({ required: true })
+    public numero?: number;
+
+    @prop({ required: true })
+    public estado!: string;
+
+    public static async countOrdenes(this: ReturnModelType<typeof Ordenes>): Promise<number> {
+        return await this.countDocuments({});
+    }
 }
 
-const OrdenesSchema = new Schema<IOrdenes, Model<IOrdenes, {}, IOrdenesMethod>>({
-    items: [{producto: Types.ObjectId,cantidad: Number }],
-    numero: { type: Number, required: true },
-    timestamp: { type: Date, required: true },
-    estado: { type: String, required: true },
-    email: { type: String, required: true },
-}, { timestamps: true });

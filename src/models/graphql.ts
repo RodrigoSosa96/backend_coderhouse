@@ -1,8 +1,5 @@
 import { buildSchema } from "graphql";
 
-
-
-
 export const rootSchema =    buildSchema(`
     scalar Date
     type User {

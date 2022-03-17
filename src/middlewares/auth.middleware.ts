@@ -5,4 +5,10 @@ const auth = (req: Request, res: Response, next: NextFunction) => {
 	// else return res.render("index", { producto: {}, existe: false });
 	return res.render("facebook-login")
 }
+export const authCarrito = (req: Request, res: Response, next: NextFunction) => {
+	if (req.isAuthenticated()) return next()
+	if (req.isUnauthenticated() || !req.user) return res.json({ message: "No estas autenticado" });
+}
+
+
 export default auth;

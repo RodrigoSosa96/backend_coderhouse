@@ -1,23 +1,23 @@
 import mongoose from "mongoose";
 import { PassportStatic } from "passport";
 import { Strategy } from "passport-local";
-import { IUser, UserModel } from "../models/_index";
+import { UserModel, User } from "../models/_index";
 import Logger from "../utils/logger";
 
 export function passport_load(passport: PassportStatic) {
     passport.use("signup", new Strategy({ passReqToCallback: true, usernameField: "email" },
         async (req, email, password, done) => {
             try {
-                const body = req.body as IUser
-                const newUser = await UserModel.create<IUser>({
+                const body = req.body as User
+                const newUser = new UserModel({
                     email,
-                    password,
                     name: body.name,
                     address: body.address,
                     age: body.age,
                     phoneNumber: body.phoneNumber,
                     picture: req.file?.filename,
-                });
+                    role: body.role                    
+                })
                 return done(null, newUser.toObject());
             } catch (err) {
                 // @ts-ignore

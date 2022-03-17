@@ -1,6 +1,7 @@
+import { isDocument } from "@typegoose/typegoose";
 import { NextFunction, Request, Response } from "express";
 import { Types } from "mongoose";
-import { CarritoModel, ICarrito, ProductosModel, UserModel } from "../../models/_index";
+import { CarritoModel,  Carrito, ProductoModel, UserModel, User, ListaProductosModel } from "../../models/_index";
 /**
  * ! Revisar todo el carrito
  * ! 1 solo carrito
@@ -13,23 +14,16 @@ import { CarritoModel, ICarrito, ProductosModel, UserModel } from "../../models/
  * * Ruta: carrito/listar/:id?
  */
 
-//  var user = newDataObj;
-//  req.logIn(user, function(error) {
-// 	 if (!error) {
-// 		console.log('succcessfully updated user');
-// 	 }
-//  });
-//  res.end(); // important to update session
-
 export const getCarrito = async (req: Request, res: Response, next: NextFunction) => {
-	if (req.isUnauthenticated() || !req.user) return res.json({ message: "No estas autenticado" });
 	try {
-		console.log(req.user.carrito)
-		let user = await UserModel.findById(req.user._id).exec();
-		user?.createCarrito();
-
-		return res.json(user?.carrito);
-	} catch {
+		const carrito = await CarritoModel.findOne({ user: req.user!._id }).select({user:0, _id: 0}).exec();
+		if (!carrito) {
+			const newCarrito = await CarritoModel.createDefault(req.user!._id)
+			UserModel.findByIdAndUpdate(req.user!._id, { $set: { carrito: newCarrito._id } }).lean().exec();
+			return res.json(newCarrito);
+		}
+		return res.json(carrito);
+	} catch(err) {
 		return res.json({ message: "Error al listar el carrito" });
 	}
 };
@@ -38,6 +32,26 @@ export const getCarrito = async (req: Request, res: Response, next: NextFunction
  * * Ruta: carrito/agregar/:id_producto
  */
 export const postCarrito = async (req: Request, res: Response, next: NextFunction) => {
+	const { id_producto } = req.params;
+	try {
+		const producto = await ProductoModel.findById(id_producto).exec();
+		if (!producto) return res.json({ message: "Producto no encontrado" });
+
+		const { carrito }  = await UserModel.findOne({ _id: req.user!._id }).populate("carrito").exec() as {carrito: Carrito};
+		if (isDocument(carrito)) return res.json({ message: "Carrito no encontrado" });
+		// const nuevoProducto = new ListaProductosModel({
+		// 	producto: producto._id,
+		// 	cantidad: "1"
+		// });
+		// carrito.addProducto(nuevoProducto);
+		
+		res.json(carrito)
+
+		
+	} catch(err) {
+		return res.json({ message: "Error al agregar el producto" });
+	}
+
 	// try {
 	// 	let { params } = req;
 	// 	const { id_producto } = params;

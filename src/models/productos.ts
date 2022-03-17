@@ -1,26 +1,61 @@
-import { Schema, model, Model } from 'mongoose';
+import { prop, getModelForClass, ReturnModelType, DocumentType } from "@typegoose/typegoose";
+import { Types } from "mongoose";
+
+export class Producto {
+    @prop({ required: true })
+    public name!: string;
+
+    @prop({ required: true })
+    public description!: string;
+    
+    @prop({ required: true })
+    public category!: string;
+
+    @prop({ required: true })
+    public code!: string;
+
+    @prop({ required: true })
+    public image!: string;
+
+    @prop({ required: true })
+    public price!: Types.Decimal128;
+    // public price!: string;
+
+    @prop({ required: true })
+    public stock!: number;
+
+    public static async findByCode(this: ReturnModelType<typeof Producto>, code: string) {
+        return await this.findOne({ code });
+    }
+
+    public static async findByCategory(this: ReturnModelType<typeof Producto>, category: string) {
+        return await this.find({ category });
+    }
+
+    private checkStock(this:DocumentType<Producto>, quantity: number) {
+        if (this.stock >= quantity) {
+            return true;
+        }
+        return false;
+    }
+
+    public async updateStock(this: DocumentType<Producto>, quantity: number) {
+        if (this.checkStock(quantity)) {
+            this.stock -= quantity;
+            await this.save();
+            return true;
+        }
+        return false;
+    }
+
+    public async addStock(this: DocumentType<Producto>, quantity: number) {
+        this.stock += quantity;
+        await this.save();
+    }
 
 
-export interface IProducto {
-    timestamp: Date;
-    name: string;
-    description: string;
-    code: string;
-    image: string;
-    price: string | number;
-    stock: number;
+    
 }
+ export default getModelForClass(Producto);
 
 
-const Producto = new Schema<IProducto, Model<IProducto>>({
-    timestamp: { type: Date, required: true },
-    name: { type: String, required: true },
-    description: { type: String, required: true },
-    code: { type: String, required: true },
-    image: { type: String, required: true },
-    price: { type: Number, required: true },
-    stock: { type: Number, required: true }
-});
-
-
-export const ProductosModel = model<IProducto, Model<IProducto>>('Producto', Producto);

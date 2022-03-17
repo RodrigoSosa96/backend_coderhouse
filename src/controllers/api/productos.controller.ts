@@ -1,8 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { v4 } from "uuid";
 
-import { ProductosModel, IProducto } from "../../models/_index";
-// import { serverConfig } from "../../configs/_index";
+import {  ProductoModel, Producto } from "../../models/_index";
 import { isValidObjectId } from "mongoose";
 import Logger from "../../utils/logger";
 
@@ -12,7 +11,7 @@ import Logger from "../../utils/logger";
  */
 export const productosMain = async (req: Request, res: Response) => {
 	try {
-		const productos: IProducto[] = await ProductosModel.find().select({ _id: 0, __v: 0 }).lean().exec()
+		const productos = await ProductoModel.find().select({ _id: 0, __v: 0 }).lean().exec()
 		if (req.isAuthenticated()) res.render("home", { producto: productos, login: true });
 		else res.render("home", { producto: productos, login: false });
 	} catch {
@@ -31,12 +30,12 @@ export const getProductos = async (req: Request, res: Response) => {
 	let { id } = req.params;
 	try {
 		if (!id) {
-			const datos = await ProductosModel.find().select({_id: 0, __v: 0 }).lean().exec()
+			const datos = await ProductoModel.find().select({_id: 0, __v: 0 }).lean().exec()
 			res.status(202).json(datos);
 		}
 		else {
 			if (isValidObjectId(id)) {
-				const datos = await ProductosModel.findById(id).select({ _id: 0, __v: 0 }).lean().exec()
+				const datos = await ProductoModel.findById(id).select({ _id: 0, __v: 0 }).lean().exec()
 				res.status(202).json(datos);
 			} else {
 				res.status(400).json({
@@ -58,10 +57,10 @@ export const getProductos = async (req: Request, res: Response) => {
  * * Administrador
  */
 export const postProductos = async (req: Request, res: Response, next: NextFunction) => {
-	let body = req.body as Omit<IProducto, "timestamp">
+	let body = req.body as Omit<Producto, "timestamp">
 	try {
 		if (body.name && body.description && body.image && body.price && body.stock) {
-			const newProduct = await ProductosModel.create<IProducto>({
+			const newProduct = await ProductoModel.create<Producto>({
 				...body,
 				code: body.code ?? v4(),
 				timestamp: new Date(),
@@ -89,9 +88,9 @@ export const putProductos = async (req: Request, res: Response) => {
 	let id = isValidObjectId(req.params.id) ? req.params.id : null;
 	if (!id) return res.status(400).json({ message: "Id inválido" });
 
-	let data = req.body as IProducto;
+	let data = req.body as Producto;
 	try {
-		const updateProduct = await ProductosModel.findByIdAndUpdate(id, data, { new: true }).lean().exec();
+		const updateProduct = await ProductoModel.findByIdAndUpdate(id, data, { new: true }).lean().exec();
 		if (updateProduct) res.status(202).json(updateProduct);
 		else res.status(404).json({ error: -1, message: "No se encontro el producto" });
 	} catch (err) {
@@ -111,7 +110,7 @@ export const deleteProductos = async (req: Request, res: Response) => {
 	if (!id) return res.status(404).json({ error: -1, message: "Id inválido" });
 
 	try {
-		const producto = await ProductosModel.findByIdAndDelete(id).lean().exec();
+		const producto = await ProductoModel.findByIdAndDelete(id).lean().exec();
 		producto
 			? res.status(202).json({ message: "Producto eliminado" })
 			: res.status(404).json({ error: -1, message: "No se encontro el producto" });

@@ -1,22 +1,25 @@
-import { Schema, model, Types } from 'mongoose';
-import { IUser } from './user';
+import { prop } from "@typegoose/typegoose";
 
 
 
-export interface IMensajes {
-    author: Types.ObjectId | IUser,
-    name: string,
-    message: string,
+enum Tipo {
+    usuario = "usuario",
+    sistema = "sistema"
 }
-export interface PopulatedMensajes {
-    author: IUser | null;
+// Unico Chat con todos los usuarios
+export class Mensaje {
+    @prop({ required: true })
+    public email!: string;
+    
+    @prop({ required: true })
+    public fecha!: Date;
+    
+    @prop({ required: true })
+    public body!: string;
+    
+    @prop({ enum: Tipo })
+    public tipo!: Tipo;
 
+    
 }
 
-const MensajesSchema = new Schema<IMensajes>({
-    author: { type: Types.ObjectId, ref: 'User', required: true },
-    name: { type: String, required: true },
-    message: { type: String, trim: true, lowercase: true, required: [true, "Message is required"] }
-});
-
-export const MensajesModel = model<IMensajes>('Mensaje', MensajesSchema);
