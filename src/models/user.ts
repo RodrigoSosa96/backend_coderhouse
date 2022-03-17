@@ -1,4 +1,4 @@
-import { prop, Ref, pre, DocumentType, ReturnModelType } from "@typegoose/typegoose";
+import { prop, Ref, pre, DocumentType, ReturnModelType, index } from "@typegoose/typegoose";
 import bcrypt from "bcrypt";
 
 import { Ordenes } from "./ordenes";
@@ -25,12 +25,12 @@ enum Role {
 		else next(new Error("Error al encriptar la contraseña"));
 	}
 })
+@index({ email: 1, carrito:1 }, { unique: true })
 export class User {
 	@prop({
 		required: true,
 		lowercase: true,
 		trim: true,
-		unique: true,
 		validate: emailValidator,
 	})
 	public email!: string;
@@ -50,7 +50,6 @@ export class User {
 	@prop({ required: true })
 	public phoneNumber!: string;
 
-	@prop()
 	public picture?: string;
 
     @prop({enum: Role})
@@ -59,7 +58,7 @@ export class User {
 	@prop({ref: () => Ordenes})
 	public ordenes?: Ref<Ordenes>[];
 
-	@prop({ref: () => Carrito })
+	@prop({ ref: () => Carrito })
 	public carrito?: Ref<Carrito>
 
 

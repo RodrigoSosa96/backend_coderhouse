@@ -1,6 +1,7 @@
-import { prop, getModelForClass, ReturnModelType, DocumentType } from "@typegoose/typegoose";
+import { prop, getModelForClass, ReturnModelType, DocumentType, index } from "@typegoose/typegoose";
 import { Types } from "mongoose";
 
+@index<Producto>({ code: 1 }, { unique: true })
 export class Producto {
     @prop({ required: true })
     public name!: string;
@@ -17,11 +18,11 @@ export class Producto {
     @prop({ required: true })
     public image!: string;
 
-    @prop({ required: true })
-    public price!: Types.Decimal128;
+    @prop({ required: true, type: Types.Decimal128  })
+    public price!: string;
     // public price!: string;
 
-    @prop({ required: true })
+    @prop({ required: true, default: 0 })
     public stock!: number;
 
     public static async findByCode(this: ReturnModelType<typeof Producto>, code: string) {

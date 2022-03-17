@@ -1,4 +1,6 @@
-import { pre, prop, Ref, modelOptions, DocumentType, ReturnModelType } from "@typegoose/typegoose";
+import {  prop, Ref, modelOptions, ReturnModelType, plugin, index } from "@typegoose/typegoose";
+import { AutoIncrementSimple } from "@typegoose/auto-increment"
+
 import { Producto } from "./productos";
 import { User } from "./user";
 import { OrdenesModel } from "./models"
@@ -22,16 +24,13 @@ class Items {
 }
 
 
-
-// @pre<Ordenes>("save", async function (next) {
-//     if(this.isNew){
-//         this.numero = await this.countOrdenes()
-//         next();
-//     }else {
-//         next();
-//     }
-// })
+@index<Ordenes>({user: 1})
+@plugin(AutoIncrementSimple, [{ field: 'numero' }])
 export class Ordenes {
+
+    @prop({ required: true })
+    public numero?: number;
+
     @prop({ required: true, ref: () => User })
     public user : Ref<User>;
     
@@ -43,9 +42,6 @@ export class Ordenes {
 
     @prop({ required: true })
     public address!: string;    
-
-    @prop({ required: true })
-    public numero?: number;
 
     @prop({ required: true })
     public estado!: string;

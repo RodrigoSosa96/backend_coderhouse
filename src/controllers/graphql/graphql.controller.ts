@@ -1,6 +1,5 @@
 import { GraphQLScalarType, Kind } from "graphql";
-import { IProducto, ProductosModel } from "../../models/productos";
-import { IUser, UserModel } from "../../models/user";
+import { Producto, ProductoModel, User, UserModel  } from "../../models/_index";
 
 export const rootController = {
 
@@ -28,7 +27,7 @@ export const rootController = {
         return UserModel.findById(id).select({ _id: 0, __v: 0 }).lean().exec()
     },
     createUser: async (email: string, password: string, name: string, address: string, age: number, phoneNumber: string, picture: string) => {
-        const newUser = await UserModel.create<IUser>({
+        const newUser = await UserModel.create({
             email,
             password,
             name,
@@ -49,14 +48,14 @@ export const rootController = {
 
     //Productos
     getProductos: async () => {
-        return ProductosModel.find().select({ _id: 0, __v: 0 }).lean().exec()
+        return ProductoModel.find().select({ _id: 0, __v: 0 }).lean().exec()
     },
     getProducto: async (id: any) => {
-        return ProductosModel.findById(id).select({ _id: 0, __v: 0 }).lean().exec()
+        return ProductoModel.findById(id).select({ _id: 0, __v: 0 }).lean().exec()
     },
 
     createProducto: async (name: string, description: string, code: string, image: string, price: string, stock: number) => {
-        const newProducto = await ProductosModel.create<IProducto>({
+        const newProducto = await ProductoModel.create({
             timestamp: new Date(),
             name,
             description,
@@ -68,11 +67,11 @@ export const rootController = {
         return newProducto.toObject()
     },
     deleteProducto: async (id: any) => {
-        return ProductosModel.findByIdAndDelete(id).exec()
+        return ProductoModel.findByIdAndDelete(id).exec()
 
     },
     updateProducto: async (id: any, name: string, description: string, code: string, image: string, price: string, stock: number) => {
-        const newProducto = await ProductosModel.findByIdAndUpdate(id, {
+        const newProducto = await ProductoModel.findByIdAndUpdate(id, {
             timestamp: new Date(),
             name,
             description,

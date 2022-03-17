@@ -1,21 +1,25 @@
 import faker from "faker"
-import { IProducto } from "../models/_index"
+import { ProductoModel, Producto } from "../models/_index"
 faker.setLocale("es_MX")
 faker.seed(245665)
 
-export const mockProductos = (num?: number): IProducto[] => {
-    const productos: IProducto[] = []
-    for (let i = 0; i < (num ?? 5); i++) {
-        productos.push({
-            name: faker.commerce.productName(),
-            description: faker.commerce.productDescription(),
-            code: faker.datatype.uuid(),
-            image: faker.image.business(),
-            price: parseFloat(faker.commerce.price()).toFixed(2),
-            stock: faker.datatype.number({ min: 1, max: 100 }),
-            timestamp: faker.date.past(),
-        }
-        )
+
+
+export const mockProductos = (num?: number): Producto[] => {
+    const productos: any[] = []
+
+   for (let i = 0; i < (num ?? 5); i++) {
+       productos.push(
+           new ProductoModel({
+               name: faker.commerce.productName(),
+               description: faker.commerce.productDescription(),
+               category: faker.commerce.department(),
+               code: faker.datatype.uuid(),
+               image: faker.image.imageUrl(),
+               price: faker.commerce.price(),
+               stock: faker.datatype.number()
+           }) as Producto
+       )
     }
     return productos
 }

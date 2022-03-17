@@ -16,7 +16,7 @@ routerMockData
             })
     })
     .get("/mensajes", mensajes)
-    .get("/productos", productos)
+    .post("/productos", productos)
 
 
 export default routerMockData;

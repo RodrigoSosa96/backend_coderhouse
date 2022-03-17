@@ -60,7 +60,7 @@ export const postProductos = async (req: Request, res: Response, next: NextFunct
 	let body = req.body as Omit<Producto, "timestamp">
 	try {
 		if (body.name && body.description && body.image && body.price && body.stock) {
-			const newProduct = await ProductoModel.create<Producto>({
+			const newProduct = await ProductoModel.create({
 				...body,
 				code: body.code ?? v4(),
 				timestamp: new Date(),

@@ -1,4 +1,4 @@
-import { prop, Ref, modelOptions, ReturnModelType, DocumentType } from "@typegoose/typegoose";
+import { prop, Ref, modelOptions, ReturnModelType, DocumentType, index } from "@typegoose/typegoose";
 import { Producto } from "./productos"
 import { User } from "./user";
 import { Types } from "mongoose"
@@ -28,9 +28,9 @@ export class ListaProductos {
     }
 }
 
-
+@index<Carrito>({ user: 1 }, { unique: true })
 export class Carrito {
-    @prop({ required: true, unique: true, ref: () => User })
+    @prop({ required: true, ref: () => User })
     public user!: Ref<User>;
 
     @prop({ required: true })
