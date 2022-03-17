@@ -6,7 +6,7 @@ import session from "express-session";
 import MongoStore from "connect-mongo";
 import morganMiddleware from "./morgan.middleware";
 import flash from "connect-flash";
-import { mongoDbConfigs } from "../configs/_index";
+import { serverConfig } from "../configs";
 
 
 
@@ -17,7 +17,7 @@ export const middlewares = [
     cookieParser(),
     session({
         store: new MongoStore({
-            mongoUrl: mongoDbConfigs.url,
+            mongoUrl: serverConfig.mongoDB.url,
             collectionName: "sessions"
         }),
         secret: process.env.SECRET_KEY!,

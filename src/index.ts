@@ -4,7 +4,7 @@ import { createServer } from "http";
 import mongoose from "mongoose";
 // import { Server } from "socket.io";
 
-import { serverConfig, mongoDbConfigs } from "./configs/_index"
+import { serverConfig } from "./configs"
 // import { ioSocket } from "./controllers/IoSocket.controller";
 import Logger from "./utils/logger";
 
@@ -18,7 +18,7 @@ const httpsServer = createServer(app);
 
 httpsServer.listen(PORT, async () => {
 	try {
-		const DB = await mongoose.connect(mongoDbConfigs.url);
+		const DB = await mongoose.connect(serverConfig.mongoDB.url);
 		Logger.info(`MongoDB Schemas inicializados en ${DB.connection.host + ":" + DB.connection.port + "/" + DB.connection.name}`);
 		Logger.info(`Servidor http escuchando en http://localhost:${PORT}. Process ID: ${process.pid}`);
 	} catch (err) {

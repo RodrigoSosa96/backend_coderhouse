@@ -1,7 +1,6 @@
 import { isDocument } from "@typegoose/typegoose";
 import { NextFunction, Request, Response } from "express";
-import { Types } from "mongoose";
-import { CarritoModel,  Carrito, ProductoModel, UserModel, User, ListaProductosModel } from "../../models/_index";
+import { CarritoModel,  Carrito, ProductoModel, UserModel, User, ListaProductosModel } from "../../models";
 /**
  * ! Revisar todo el carrito
  * ! 1 solo carrito

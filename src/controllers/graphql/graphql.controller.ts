@@ -1,5 +1,5 @@
 import { GraphQLScalarType, Kind } from "graphql";
-import { Producto, ProductoModel, User, UserModel  } from "../../models/_index";
+import {  ProductoModel, UserModel  } from "../../models";
 
 export const rootController = {
 

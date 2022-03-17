@@ -1,4 +1,4 @@
-import multer from 'multer';
+import multer, { Multer } from 'multer';
 import path from 'path';
 import { v4 } from 'uuid';
 
@@ -13,5 +13,8 @@ const storage = multer.diskStorage({
     }
 })
 
-// export const upload = multer({ storage });
-export const upload = multer({ storage: multer.memoryStorage() });//! Temp
+let upload: Multer
+if (process.env.NODE_ENV === 'development') upload = multer({ storage:multer.memoryStorage() });
+else upload = multer({ storage });
+
+export default upload;

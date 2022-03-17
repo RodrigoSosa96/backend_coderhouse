@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 import { PassportStatic } from "passport";
 import { Strategy } from "passport-local";
-import { UserModel, User } from "../models/_index";
-import Logger from "../utils/logger";
+import { UserModel, User } from "../../models";
+import Logger from "../../utils/logger";
 
 export function passport_load(passport: PassportStatic) {
     passport.use("signup", new Strategy({ passReqToCallback: true, usernameField: "email" },

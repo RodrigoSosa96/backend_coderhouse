@@ -4,12 +4,12 @@ import passport from "passport";
 import path from "path";
 
 //	*Import de Routers
-import { carrito, mockData, productos } from "./routes/api/_index";
+import { carrito, mockData, productos } from "./routes/api";
 import routerUsuarios from "./routes/user/user.router";
 
 //	*Varios
-import { middlewares } from "./middlewares/_init.middlewares";
-import { passport_load } from "./passport";
+import { middlewares } from "./middlewares/Init.middlewares";
+import { passport_load } from "./controllers/passport";
 // import { upload } from "./middlewares/multer.middleware";
 import { Types } from "mongoose";
 import { User as U } from "./models/user";

@@ -1,8 +1,8 @@
 import { Router } from "express";
 import passport from "passport";
 
-import { loginGet, loginPost, loginFailed, logoutPost, signupFailed, signupGet, signupPost, datos } from "../../controllers/user/_index";
-import { upload } from "../../middlewares/multer.middleware";
+import { loginGet, loginPost, loginFailed, logoutPost, signupFailed, signupGet, signupPost, datos } from "../../controllers/user";
+import upload from "../../middlewares/multer.middleware";
 
 const user = Router();
 user

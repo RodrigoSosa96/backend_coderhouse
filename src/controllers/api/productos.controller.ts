@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { v4 } from "uuid";
 
-import {  ProductoModel, Producto } from "../../models/_index";
+import {  ProductoModel, Producto } from "../../models";
 import { isValidObjectId } from "mongoose";
 import Logger from "../../utils/logger";
 

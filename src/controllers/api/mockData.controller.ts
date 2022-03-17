@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { ProductoModel, MensajeModel } from "../../models/_index"
+import { ProductoModel, MensajeModel } from "../../models"
 import { mockProductos } from "../../utils/mockData";
 
 

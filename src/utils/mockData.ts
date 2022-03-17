@@ -1,5 +1,5 @@
 import faker from "faker"
-import { ProductoModel, Producto } from "../models/_index"
+import { ProductoModel, Producto } from "../models"
 faker.setLocale("es_MX")
 faker.seed(245665)
 
