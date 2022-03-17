@@ -12,12 +12,13 @@ import { middlewares } from "./middlewares/_init.middlewares";
 import { passport_load } from "./passport";
 // import { upload } from "./middlewares/multer.middleware";
 import { Types } from "mongoose";
-import { IUser } from "./models/user";
+import { User as U } from "./models/user";
 
 
 declare global {
 	namespace Express {
-		interface User extends IUser {
+		
+		interface User extends U {
 			_id?: Types.ObjectId;
 		}
 	}
