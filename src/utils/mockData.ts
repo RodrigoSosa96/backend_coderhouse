@@ -1,54 +1,71 @@
 import faker from "faker"
-import { Producto } from "../models/ecommerce/Producto"
-
+import { IProducto } from "../models/_index"
 faker.setLocale("es_MX")
 faker.seed(245665)
 
-export const mockProductos = (): Producto[] => {
-    const productos: Producto[] = []
-    for (let i = 0; i < 5; i++) {
-        productos.push(
-            new Producto(
-                faker.commerce.productName(),
-                faker.commerce.productDescription(),
-                faker.datatype.uuid(),
-                faker.image.business(),
-                parseFloat(faker.commerce.price()).toFixed(2),
-                faker.datatype.number({ min: 1, max: 100 })
-            )
+export const mockProductos = (num?: number): IProducto[] => {
+    const productos: IProducto[] = []
+    for (let i = 0; i < (num ?? 5); i++) {
+        productos.push({
+            name: faker.commerce.productName(),
+            description: faker.commerce.productDescription(),
+            code: faker.datatype.uuid(),
+            image: faker.image.business(),
+            price: parseFloat(faker.commerce.price()).toFixed(2),
+            stock: faker.datatype.number({ min: 1, max: 100 }),
+            timestamp: faker.date.past(),
+        }
         )
     }
     return productos
 }
 
-// faker.internet.email()
-const mockAuthors = (num: number): object[] => {
-    const authors: object[] = []
-    for (let i = 0; i < num; i++) {
-        authors.push({
-            mail: faker.internet.email(),
-            nombre: faker.name.firstName(),
-            apellido: faker.name.lastName(),
-            edad: faker.datatype.number({ min: 18, max: 99 }),
-            alias: faker.internet.userName(),
-            avatar: faker.image.avatar()
-        })
-    }
-    return authors
-}
+// const mockAuthors = (num: number): { _id: string }[] => {
+//     // original array
+//     //I wanted something like this
+//     const authors: { _id: string }[]= []
 
 
-const test = mockAuthors(3)
+//     // IUser & { _id: string }  = []
+//     for (let i = 0; i < num; i++) {
+//         authors.push({
+//             _id: faker.datatype.uuid()
+
+//         })
+//     }
+
+    // IUser & { _id: string }  = []
+    // for (let i = 0; i < num; i++) {
+    //     authors.push({
+    //         _id: faker.datatype.uuid(),
+    //         phoneNumber: {
+    //             number: faker.phone.phoneNumber(),
+    //             countryCode: faker.phone.phoneNumber("#"),
+    //             stateCode: faker.phone.phoneNumber("#"),
+    //         },
+    //         address: faker.address.streetAddress(),
+    //         age: faker.datatype.number({ min: 18, max: 65 }),
+    //         email: faker.internet.email(),
+    //         name: faker.name.findName(),
+    //         password: faker.internet.password(),
+    //         picture: faker.image.avatar(),
+    //     })
+    // }
+//     return authors
+// }
+
+
+// const test = mockAuthors(3)
 
 export const mockMensajes = (): any[] => {
-    const mensajes: any[] = []
-    for (let i = 0; i < 100; i++) {
-        mensajes.push({
-            _id: faker.datatype.uuid(),
-            author: test[Math.floor(Math.random() * 2)],
-            text: faker.lorem.sentence()
-        })
-    }
-    return mensajes
+    // const mensajes: IMensajes[] = []
+    // for (let i = 0; i < 100; i++) {
+    //     mensajes.push({
+    //         message: faker.lorem.sentence(),
+    //         //author is a red to an user
+    //         author: faker.random.arrayElement(test)._id,
+    //     })
+    // }
+    return ["no implementado"]
 }
 

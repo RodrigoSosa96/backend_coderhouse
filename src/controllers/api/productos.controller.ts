@@ -1,20 +1,17 @@
 import { NextFunction, Request, Response } from "express";
 import { v4 } from "uuid";
 
-import db from "../../index"
-import { serverConfig } from "../../configs";
-import { Producto } from "../../models/ecommerce";
+import {  ProductoModel, Producto } from "../../models/_index";
+import { isValidObjectId } from "mongoose";
+import Logger from "../../utils/logger";
 
 
 /**
  * * Ruta: /productos
  */
-export const productosMain = async (
-	req: Request,
-	res: Response,
-) => {
+export const productosMain = async (req: Request, res: Response) => {
 	try {
-		const productos = await db.getAll("productos");
+		const productos = await ProductoModel.find().select({ _id: 0, __v: 0 }).lean().exec()
 		if (req.isAuthenticated()) res.render("home", { producto: productos, login: true });
 		else res.render("home", { producto: productos, login: false });
 	} catch {
@@ -25,24 +22,32 @@ export const productosMain = async (
 }
 
 
-export const getProductos = async (
-	req: Request,
-	res: Response,
-	next: NextFunction
-) => {
-	///		/listar/:id?
+
+/**
+ * * Ruta: /productos/listar/:id?
+ */
+export const getProductos = async (req: Request, res: Response) => {
+	let { id } = req.params;
 	try {
-		let { params } = req;
-		if (params.id) {
-			const datosProductos = await db.getById("productos", params.id);
-			if (datosProductos) res.status(202).json(datosProductos);
-			else res.status(404).json({ error: -1, message: "No se encontro el producto" });
-		} else {
-			const datosProductos = await db.getAll("productos")
-			res.status(202).json(datosProductos);
+		if (!id) {
+			const datos = await ProductoModel.find().select({_id: 0, __v: 0 }).lean().exec()
+			res.status(202).json(datos);
 		}
+		else {
+			if (isValidObjectId(id)) {
+				const datos = await ProductoModel.findById(id).select({ _id: 0, __v: 0 }).lean().exec()
+				res.status(202).json(datos);
+			} else {
+				res.status(400).json({
+					message: "Id inválido"
+				})
+			}
+		}
+
 	} catch {
-		next();
+		res.status(500).json({
+			message: "Error al obtener los productos"
+		})
 	}
 };
 
@@ -51,32 +56,26 @@ export const getProductos = async (
  * * Ruta: /productos/agregar
  * * Administrador
  */
-export const postProductos = async (
-	req: Request,
-	res: Response,
-	next: NextFunction
-) => {
+export const postProductos = async (req: Request, res: Response, next: NextFunction) => {
+	let body = req.body as Omit<Producto, "timestamp">
 	try {
-		let { body } = req;
-		if (!serverConfig.admin) throw new Error("No esta autorizado para realizar esta accion");
 		if (body.name && body.description && body.image && body.price && body.stock) {
-			const newProduct = new Producto(
-				body.name,
-				body.description,
-				body.code ?? v4(),
-				body.image,
-				body.price,
-				body.stock,
-			)
-			await db.addItem("productos", newProduct);
+			const newProduct = await ProductoModel.create<Producto>({
+				...body,
+				code: body.code ?? v4(),
+				timestamp: new Date(),
+			});
 			res.status(201).json(newProduct);
 		} else {
 			res.status(401).json({
 				error: "No se completaron los campos",
 			});
 		}
-	} catch {
-		next();
+	} catch (err) {
+		Logger.error(err)
+		res.status(500).json({
+			message: "Error al agregar el producto"
+		})
 	}
 };
 
@@ -85,63 +84,42 @@ export const postProductos = async (
  * * Ruta: /productos/actualizar/:id
  * * Administrador
  */
-export const putProductos = async (
-	req: Request,
-	res: Response,
-	next: NextFunction
-) => {
-	try {
-		let { body, params } = req;
-		if (serverConfig.admin) {
-			const data = {
-				...body
-			};
-			const updateProduct = await db.updateItem("productos", params.id, data);
-			if (updateProduct) res.status(202).json(updateProduct);
-			else res.status(404).json({ error: -1, message: "No se encontro el producto" });
+export const putProductos = async (req: Request, res: Response) => {
+	let id = isValidObjectId(req.params.id) ? req.params.id : null;
+	if (!id) return res.status(400).json({ message: "Id inválido" });
 
-			// let existeProducto = await db.getById("productos", params.id);
-			// if (existeProducto) {
-			// 	existeProducto = { ...existeProducto, ...updateProduct }
-			// 	await db.updateItem("productos", params.id, existeProducto);
-			// 	res.status(202).json(existeProducto);
-			// } else {
-			// 	res.status(404).json({ error: -1, message: "No se encontro el producto" });
-			// }
-		} else {
-			res.status(401).json({
-				error: "No tienes permisos para actualizar productos",
-			});
-		}
-	} catch {
-		next();
-	}
-};
+	let data = req.body as Producto;
+	try {
+		const updateProduct = await ProductoModel.findByIdAndUpdate(id, data, { new: true }).lean().exec();
+		if (updateProduct) res.status(202).json(updateProduct);
+		else res.status(404).json({ error: -1, message: "No se encontro el producto" });
+	} catch (err) {
+		Logger.error(err);
+		res.status(500).json({
+			message: "Error al actualizar el producto"
+		})
+	};
+}
 
 
 /**
  * * Ruta: /productos/borrar/:id
  */
-export const deleteProductos = async (
-	req: Request,
-	res: Response,
-	next: NextFunction
-) => {
+export const deleteProductos = async (req: Request, res: Response) => {
+	let id = isValidObjectId(req.params.id) ? req.params.id : null;
+	if (!id) return res.status(404).json({ error: -1, message: "Id inválido" });
+
 	try {
-		let { params } = req;
-		if (serverConfig.admin) {
-			const existeProducto = await db.getById("productos", params.id);
-			if (!existeProducto) next();
-			await db.deleteItem("productos", params.id);
-			res.status(202).json({
-				message: "Producto borrado",
-			});
-		} else {
-			res.status(401).json({
-				error: "No tienes permisos para borrar productos",
-			});
-		}
-	} catch {
-		next();
+		const producto = await ProductoModel.findByIdAndDelete(id).lean().exec();
+		producto
+			? res.status(202).json({ message: "Producto eliminado" })
+			: res.status(404).json({ error: -1, message: "No se encontro el producto" });
+
+
+	} catch (err) {
+		console.log(err);
+		res.status(500).json({
+			message: "Error al eliminar el producto"
+		})
 	}
-};
+}

@@ -1,16 +1,21 @@
 import { Router } from "express";
 import passport from "passport";
 
-import controller from "../../controllers/user.controller";
-const user = Router();
+import { loginGet, loginPost, loginFailed, logoutPost, signupFailed, signupGet, signupPost, datos } from "../../controllers/user/_index";
+import { upload } from "../../middlewares/multer.middleware";
 
+const user = Router();
 user
-    .get("/auth/facebook", passport.authenticate("facebook", { scope: ["email"] }))
-    .get("/auth/facebook/redirect", passport.authenticate("facebook", {failureRedirect: "/user/failedLogin"}), (req, res) => {
-        res.redirect("/");
-    })
-    .get("/datos", controller.datos)
-    .get("/failedLogin", controller.failedLogin)
-    .get("/logout", controller.logout)
+    //Signup:
+    .get("/signup", signupGet)
+    .post("/signup", upload.single("picture"), passport.authenticate("signup", { failureRedirect: "/failed", failureFlash: true }), signupPost)
+    .get("/failed", signupFailed)
+    //Login:
+    .get("/login", loginGet)
+    .post("/login", passport.authenticate("login", { failureRedirect: "/login/failed", failureFlash: true }), loginPost)
+    .get("/login/failed", loginFailed)
+    .get("/datos", datos)
+    //Logout:
+    .get("/logout", logoutPost)
 
 export default user;

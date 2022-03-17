@@ -1,77 +1,44 @@
-import Express, { Application, NextFunction, Request, Response } from "express";
+import Express, { Application } from "express";
 import handlebars from "express-handlebars";
-import cookieParser from 'cookie-parser';
-import MongoStore from "connect-mongo";
-import session from "express-session";
-import flash from "connect-flash";
 import passport from "passport";
 import path from "path";
-import compression from "compression";
 
 //	*Import de Routers
-import { carrito, mockData, productos } from "./routes/api";
+import { carrito, mockData, productos } from "./routes/api/_index";
 import routerUsuarios from "./routes/user/user.router";
 
 //	*Varios
-import { auth } from "./middlewares";
-import { mongoDbConfigs } from "./configs";
-import userModel from "./models/user/user.model";
+import { middlewares } from "./middlewares/_init.middlewares";
+import { passport_load } from "./passport";
+// import { upload } from "./middlewares/multer.middleware";
+import { Types } from "mongoose";
+import { User as U } from "./models/user";
+
 
 declare global {
 	namespace Express {
-		interface User {
-			_id?: string;
-			firstName?: string;
-			lastName?: string;
+		
+		interface User extends U {
+			_id?: Types.ObjectId;
 		}
 	}
 }
-const app: Application = Express();
-/**
- ** Middlewares
- */
-app.use(compression())
-app.use(Express.json());
-app.use(Express.urlencoded({ extended: true }));
-app.use(cookieParser());
-app.use(session({
-	store: new MongoStore({
-		mongoUrl: mongoDbConfigs.url
-	}),
-	secret: process.env.SECRET_KEY!,
-	resave: false,
-	saveUninitialized: false,
-	cookie: {
-		maxAge: 600000 // 10 minutos
-	}
-}));
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(flash());
-passport.serializeUser((user, done) => {
-	done(null, user._id);
-});
+const app: Application = Express()
 
-passport.deserializeUser(async (id:string, done) => {
-	try {
-		const user = await userModel.findById(id);
-		done(null, user);
-	}
-	catch (err) {
-		done(null, false);
-	}
-});
+//*	Middlewares
+
+app.use(middlewares)
+passport_load(passport);
 
 
-/**
- * * Routers
- */
+// * Rutas
 
 app.use(Express.static(path.join(__dirname, "../public")));
 app.use("/productos", productos);
 app.use("/carrito", carrito);
 app.use("/mockdata", mockData);
-app.use("/user", routerUsuarios);
+app.use("/", routerUsuarios);
+
 
 
 
@@ -93,25 +60,16 @@ app.set("view engine", "hbs");
 //* Rutas
 
 app.get("/", async (req, res) => {
-	if (req.user) res.render("home", { logged: true, user: req.user.firstName + " " + req.user.lastName });
-	else res.render("home", { logged: true, user: "USER ERROR" });
+	if (req.user) res.render("home", { logged: true, user: req.user.name });
+	else res.render("home", { logged: false }); 
 });
 
-app.get("/info", (_req, res) => {
-	res.json({
-		"Argumentos de entrada": process.argv,
-		"Nombre de la plataforma": process.platform,
-		"Versión de node.js": process.version,
-		"Uso de memoria": process.memoryUsage(),
-		"Path de ejecución": process.cwd(),
-		"Process id": process.pid,
-		"Carpeta corriente": "qué es?"
-	})
-})
 
 //* Error 404
 app.use(function (_req, res) {
 	res.status(404).send('Ruta no encontrada');
+	// res.render('404');
+
 });
 
 export default app;

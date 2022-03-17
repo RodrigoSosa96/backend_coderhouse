@@ -4,7 +4,7 @@ import fs from "fs";
 
 const serverConfig = {
 	admin: true,
-	hostNanme: "http://localhost:8080",
+	hostName: "http://localhost:8080",
 	PORT: parseInt(process.env.PORT as string) || 8080,
 	// key: fs.readFileSync(path.resolve(__dirname, "../../sslcert/key.pem")),
 	// cert: fs.readFileSync(path.resolve(__dirname, "../../sslcert/cert.pem")),
