@@ -1,14 +1,15 @@
 <div class="form-card">
     <h2>Login</h2>
-    <p id="signup-error" class="alert d-none">Algunos de los datos es incorrecto</p>
-    <form action="/login" method="POST" id="login-form">
+    <p id="form-error" class="alert d-none">Algunos de los datos es incorrecto</p>
+    <form action="/login" method="POST" name="login-form">
         <label for="email">Email:</label>
-        <input type="text" name="email" id="username" />
+        <input autocomplete="email" type="text" name="email" id="username" />
 
         <label for="password">Password:</label>
-        <input type="password" name="password" id="password" />
+        <input autocomplete="current-password" type="password" name="password" id="password" />
 
-        <button id="login-button">Login</button>
+        <button type="submit">Login</button>
+        <p class="alert d-none">Error al inicar sesión  </p>
     </form>
-    <button id="signup-redirect">Signup</button>
+        <button type="button" ><a href="/signup">Signup</a></button>
 </div>

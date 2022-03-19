@@ -1,46 +1,39 @@
 {{!-- signup form card --}}
 <div class="form-card">
     <h2>Registrarse</h2>
-    <p id="signup-error" class="alert d-none"> </p>
-    <form id="signup-form">
-        {{!-- email: string;
-        password: string;
-        name: string;
-        address: string;
-        age: number;
-        phoneNumber: string;
-        picture: string; --}}
+    <form action="/signup" method="POST" name="signup" enctype="multipart/form-data">
         <div>
             <label for="email">Email</label>
-            <input type="email" name="email" id="email" required>
+            <input autocomplete="email" type="email" name="email"  required>
         </div>
         <div>
             <label for="password">Contraseña</label>
-            <input type="password" name="password" id="password" required>
+            <input type="password" name="password" required>
         </div>
         <div>
             <label for="name">Nombre</label>
-            <input type="text" name="name" id="name" required>
+            <input autocomplete="name" type="text" name="name" required>
         </div>
         <div>
             <label for="address">Dirección</label>
-            <input type="text" name="address" id="address" required>
+            <input autocomplete="street-address" type="text" name="address" required>
         </div>
         <div>
             <label for="age">Edad</label>
-            <input type="number" name="age" id="age" required>
+            <input type="number" name="age"  required>
         </div>
         <div>
             <label for="phoneNumber">Teléfono</label>
-            <input type="text" name="phoneNumber" id="phoneNumber" required>
+            <input autocomplete="tel" type="text" name="phoneNumber"  required>
         </div>
         <div>
-            <label for="picture">Foto de perfil</label>
-            <input type="text" name="picture" id="picture" required>
+            <label for="picture">Foto de perfil <label>
+            <input type="file" name="picture"  placeholder="default.jpg">
         </div>
 
         <div>
-            <button>Registrarse</button>
+            <button type="submit">Registrarse</button>
         </div>
+            <p class="alert d-none">Error al registrarse</p>
     </form>
 </div>

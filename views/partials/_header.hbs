@@ -4,7 +4,8 @@
         <a href="#" class="not-active">Home</a>
         <a href="#" class="not-active">Productos</a>
         {{#if logged}}
-            <a href="#" id="logout-button">Logout</a>
+            <a href="/user-info" >User Info</a>
+            <a href="/logout" >Logout</a>
         {{else}}
             <a href="/login" >Login</a>
         {{/if}}

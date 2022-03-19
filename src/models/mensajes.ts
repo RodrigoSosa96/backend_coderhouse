@@ -19,7 +19,6 @@ export class Mensaje {
     
     @prop({ enum: Tipo })
     public tipo!: Tipo;
-
     
 }
 

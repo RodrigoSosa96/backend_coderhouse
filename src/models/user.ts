@@ -50,9 +50,10 @@ export class User {
 	@prop({ required: true })
 	public phoneNumber!: string;
 
+	@prop({ required: true, default: "default.jpg" })
 	public picture?: string;
 
-    @prop({enum: Role})
+    @prop({enum: Role, default: Role.user})
     public role?: Role;
 
 	@prop({ref: () => Ordenes})

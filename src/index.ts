@@ -2,10 +2,10 @@ import "dotenv/config";
 import app from "./app";
 import { createServer } from "http";
 import mongoose from "mongoose";
-// import { Server } from "socket.io";
+import { Server } from "socket.io";
 
 import { serverConfig } from "./configs"
-// import { ioSocket } from "./controllers/IoSocket.controller";
+import SocketController from "./controllers/chat/socket.controller";
 import Logger from "./utils/logger";
 
 // const httpsOptions = {
@@ -15,6 +15,11 @@ import Logger from "./utils/logger";
 const PORT = serverConfig.PORT
 
 const httpsServer = createServer(app);
+
+const ioServer = new Server(httpsServer);
+const io = new SocketController(ioServer);
+io.init();
+
 
 httpsServer.listen(PORT, async () => {
 	try {

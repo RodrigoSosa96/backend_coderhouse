@@ -4,7 +4,7 @@ import { Request, Response } from "express";
 export const loginGet = async (req: Request, res: Response) => {
 
     if (req.isAuthenticated()) res.redirect('/')
-    else res.render('login')
+    else res.render('login', { jsfile: 'form-data.js' })
 }
 export const loginPost = async (req: Request, res: Response) => {
     // res.send('login post')

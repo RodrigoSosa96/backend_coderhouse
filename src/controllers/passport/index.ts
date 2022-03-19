@@ -1,3 +1,4 @@
+import { unlink } from "fs/promises";
 import mongoose from "mongoose";
 import { PassportStatic } from "passport";
 import { Strategy } from "passport-local";
@@ -9,27 +10,28 @@ export function passport_load(passport: PassportStatic) {
         async (req, email, password, done) => {
             try {
                 const body = req.body as User
-                const newUser = new UserModel({
+                const newUser = await UserModel.create({
                     email,
+                    password,
                     name: body.name,
                     address: body.address,
                     age: body.age,
                     phoneNumber: body.phoneNumber,
                     picture: req.file?.filename,
-                    role: body.role                    
+                    role: body.role
                 })
-                return done(null, newUser.toObject());
-            } catch (err) {
-                // @ts-ignore
-                if (err.code === 11000) {
+                const pojo = newUser.toObject()
+                console.log(pojo)
+                return done(null, pojo);
+            } catch ({code}) {
+                if(req.file) {
+                    console.log("Borrando archivo")
+                    await unlink(req.file.path)
+                }
+                if (code === 11000) {
                     return done(null, false, { message: "Usuario ya existe" });
                 }
-                if (err instanceof mongoose.Error.ValidationError) {
-                    return done(null, false, { message: "Error validando los datos" });
-                }
-                return done(err);
-
-
+                return done(null, false, { message: "Error validando los datos" });
             }
         }
     ));
@@ -47,8 +49,8 @@ export function passport_load(passport: PassportStatic) {
                 }
                 return done(null, user.toObject());
             }
-            catch (err) {
-                done(err);
+            catch  {
+                done("Error validando los datos");
             }
         }
     ));

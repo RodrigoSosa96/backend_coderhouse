@@ -1,0 +1,56 @@
+{{!-- signup form card --}}
+<div class="form-card">
+    <h2>Cambiar datos de usuario</h2>
+    <p id="change-user-data" class="alert d-none"> </p>
+    <form  method="post" name="change-data" action="/change-data" enctype="multipart/form-data"  >
+        <div>
+            <label for="name">Nombre</label>
+            <input autocomplete="name" type="text" name="name" id="name">
+        </div>
+        <div>
+            <label for="address">Dirección</label>
+            <input autocomplete="street-address" type="text" name="address" id="address">
+        </div>
+        <div>
+            <label for="age">Edad</label>
+            <input  type="number" name="age" id="age">
+        </div>
+        <div>
+            <label for="phoneNumber">Teléfono</label>
+            <input autocomplete="tel" type="text" name="phoneNumber" id="phoneNumber">
+        </div>
+        <div>
+            <label for="picture">Foto de perfil</label>
+            <input type="file" name="picture" id="picture">
+            <label class="file-wrapper">
+                <input type="file" aria-label="File browser example">
+                <span class="file-input"></span>
+            </label>
+        </div>
+
+        <div>
+            <button type="submit">Cambiar</button>
+
+        </div>
+            <p class="alert d-none">Error al cambiar los datos</p>
+    </form>
+</div>
+<div class="form-card">
+    <h2>Cambiar contraseña</h2>
+    <p id="change-password" class="alert d-none"> </p>
+    <form  method="post" name="change-password" action="/change-password">
+        <div>
+            <label for="oldPassword">Contraseña</label>
+            <input autocomplete="current-password" type="password" name="oldPassword" >
+        </div>
+        <div>
+            <label for="newPassword">Contraseña</label>
+            <input autocomplete="new-password" type="password" name="newPassword" >
+        </div>
+        <div>
+            <button type="submit">Cambiar contraseña</button>
+        </div>
+        <p class="alert d-none">Error al cambiar la contraseña</p>
+
+    </form>
+</div>

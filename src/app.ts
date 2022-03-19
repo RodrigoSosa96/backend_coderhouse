@@ -60,7 +60,8 @@ app.set("view engine", "hbs");
 //* Rutas
 
 app.get("/", async (req, res) => {
-	if (req.user) res.render("home", { logged: true, user: req.user.name });
+	if (req.isAuthenticated())
+		res.render("home", { logged: true, user: req.user.name, jsfile: "chat.js" });
 	else res.render("home", { logged: false }); 
 });
 

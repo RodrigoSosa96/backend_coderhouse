@@ -1,0 +1,21 @@
+<div class="user-info">
+    <div class="user-info-header">
+        <h2>{{ user.name }}</h2>
+    </div>
+    <div class="user-info-body">
+        <div class="row">
+            <div class="col-sm-6">
+                <img src="images/users/{{ user.picture }}" alt="profile picture" class="img-thumbnail">
+            </div>
+            <div class="col-sm-6">
+                <p>{{ user.email }}</p>
+                <p>{{ user.name }}</p>
+                <p>{{ user.address }}</p>
+                <p>{{user.age }}</p>
+                <p>{{user.phoneNumber}}</p>
+            </div>
+        </div>
+        <a href="/change-data">Cambiar datos de usuario</a>
+    </div>
+</div>
+

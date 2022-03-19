@@ -1,0 +1,39 @@
+<div class="container">
+	<div class="row">
+		<div class="col-12">
+			<table class="table table-image">
+				<thead>
+					<tr>
+						<th scope="col">id</th>
+						<th scope="col">Imagen</th>
+						<th scope="col">Producto</th>
+						<th scope="col">Precio</th>
+                        <th scope="col">Cantidad</th>
+					</tr>
+				</thead>
+				<tbody id="catalogoProductos">
+					{{#if existe}}
+						{{#each producto}}
+							<tr>
+								<th scope="row"> {{this.id}}  </th>
+								<td class="w-25">
+									<img
+										src={{this.thumbnail}}
+										class="img-fluid img-thumbnail"
+										alt={{this.title}}
+									/>
+								</td>
+								<td>{{this.title}}</td>
+								<td>{{this.price}}</td>
+                                <td>
+                                    <input type="number" class="form-control" id="cantidad" name="cantidad" value="1" min="1" max="{{this.stock}}">
+                                </td>
+							</tr>
+						{{/each}}
+					{{/if}}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
