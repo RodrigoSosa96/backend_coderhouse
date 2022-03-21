@@ -23,7 +23,7 @@ declare global {
 		}
 	}
 }
-const app: Application = Express()
+const app = Express()
 
 //*	Middlewares
 
