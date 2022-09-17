@@ -2,7 +2,33 @@ import { isDocument } from "@typegoose/typegoose";
 import { NextFunction, Request, Response } from "express";
 import { CarritoModel,  Carrito, ProductoModel, UserModel, User, ListaProductosModel } from "../../models";
 
+const allowlist = ["Jon", "Jane"];
 
+const allowlistOnly = (target: any, memberName: string) => {
+  let currentValue: any = target[memberName];
+
+  Object.defineProperty(target, memberName, {
+    set: (newValue: any) => {
+      if (!allowlist.includes(newValue)) {
+        return;
+      }
+      currentValue = newValue;
+    },
+    get: () => currentValue
+  });
+};
+
+
+function MethodDecorator(value) {
+	return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+    descriptor.enumerable = value;
+  };
+}
+function enumerable(value: boolean) {
+  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+    descriptor.enumerable = value;
+  };
+}
 
 class CarritoController {
 	constructor() {}
